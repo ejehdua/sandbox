@@ -1,296 +1,561 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torah Dice Game - Parashat Pinchas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>צופן החצר</title>
     <style>
-        @keyframes roll {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .rolling {
-            animation: roll 0.5s ease-in-out;
+        
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 70%, #533483 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
         }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .bounce {
-            animation: bounce 0.6s;
+        
+        .game-container {
+            background: linear-gradient(145deg, rgba(255, 248, 220, 0.98), rgba(255, 245, 238, 0.95));
+            border-radius: 25px;
+            padding: 50px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(255, 215, 0, 0.2);
+            border: 4px solid #daa520;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #daa520, #ffd700, #ffef94, #ffd700, #daa520);
+            box-shadow: 0 2px 10px rgba(218, 165, 32, 0.5);
+        }
+        
+        .game-container::after {
+            content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(218, 165, 32, 0.4);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+        }
+        
+        .title {
+            text-align: center;
+            color: #8b4513;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 215, 0, 0.3);
+            position: relative;
+        }
+        
+        .title::before {
+            content: '✨';
+            position: absolute;
+            left: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        .title::after {
+            content: '✨';
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-in-out infinite 1s;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+            50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #a0522d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+        
+        .progress {
+            background: #f4e4bc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #daa520;
+        }
+        
+        .progress-text {
+            color: #8b4513;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .riddle-container {
+            background: linear-gradient(145deg, #ffffff, #fefefe);
+            border-radius: 18px;
+            padding: 35px;
+            margin-bottom: 25px;
+            border: 3px solid #daa520;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        
+        .riddle-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #daa520, #ffd700, #daa520);
+            border-radius: 20px;
+            z-index: -1;
+        }
+        
+        .riddle-text {
+            color: #8b4513;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        input[type="text"], input[type="number"] {
+            flex: 1;
+            max-width: 300px;
+            padding: 15px 20px;
+            border: 3px solid #daa520;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-family: 'Heebo', sans-serif;
+            text-align: center;
+            background: linear-gradient(145deg, #fafafa, #ffffff);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #b8860b;
+            box-shadow: 0 0 10px rgba(218, 165, 32, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Heebo', sans-serif;
+            box-shadow: 
+                0 4px 15px rgba(218, 165, 32, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 6px 20px rgba(218, 165, 32, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .feedback.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+        
+        .final-challenge {
+            background: linear-gradient(135deg, #2c1810, #8b4513);
+            color: #ffd700;
+            border: 3px solid #daa520;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(218, 165, 32, 0.5); }
+            to { box-shadow: 0 0 30px rgba(218, 165, 32, 0.8); }
+        }
+        
+        .final-challenge .riddle-text {
+            color: #ffd700;
+            font-size: 1.3rem;
+        }
+        
+        .victory {
+            background: linear-gradient(135deg, #228b22, #32cd32);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            animation: celebrate 1s ease-in-out;
+        }
+        
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .victory h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .riddle-text {
+                font-size: 1.1rem;
+            }
+            
+            .input-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-100 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Header -->
-        <div class="text-center mb-8" dir="rtl">
-            <h1 class="text-4xl font-bold text-purple-800 mb-2">🎲 משחק קוביות תורה</h1>
-            <h2 class="text-2xl text-blue-700 mb-4">פרשת פינחס</h2>
-            <div class="bg-white rounded-lg shadow-md p-4 inline-block">
-                <p class="text-gray-700">גלגל את הקובייה כדי לקבל שאלה על הפרשה!</p>
-                <div class="mt-2">
-                    <span class="text-lg font-semibold text-green-600">ניקוד: </span>
-                    <span id="score" class="text-lg font-bold text-green-700">0</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dice Section -->
-        <div class="text-center mb-8">
-            <div id="dice" class="inline-block bg-gradient-to-br from-white to-gray-100 rounded-2xl shadow-2xl p-12 mb-6 border-4 border-purple-200">
-                <div class="text-9xl" id="diceDisplay">🎲</div>
-            </div>
-            <br>
-            <button id="rollButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-10 rounded-xl text-2xl shadow-lg transform hover:scale-105 transition-all duration-200" dir="rtl">
-                גלגל קובייה!
-            </button>
-        </div>
-
-        <!-- Question Section -->
-        <div id="questionSection" class="bg-white rounded-lg shadow-lg p-6 mb-6 hidden" dir="rtl">
-            <h3 class="text-xl font-bold text-purple-800 mb-4">שאלה:</h3>
-            <p id="questionText" class="text-lg text-gray-800 mb-6 leading-relaxed"></p>
-            
-            <div class="mb-4">
-                <label for="answerInput" class="block text-sm font-medium text-gray-700 mb-2">התשובה שלך:</label>
-                <textarea id="answerInput" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" placeholder="כתוב את התשובה שלך כאן..."></textarea>
-            </div>
-            
-            <button id="submitButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform hover:scale-105 transition-all duration-200">
-                שלח תשובה
-            </button>
-        </div>
-
-        <!-- Feedback Section -->
-        <div id="feedbackSection" class="rounded-lg p-6 mb-6 hidden" dir="rtl">
-            <div id="feedbackContent"></div>
-            <button id="nextButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md mt-4 transform hover:scale-105 transition-all duration-200">
-                גלגל שוב
-            </button>
-        </div>
-
-        <!-- Instructions -->
-        <div class="text-center">
-            <button id="instructionsButton" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transform hover:scale-105 transition-all duration-200" dir="rtl">
-                איך לשחק?
-            </button>
+<body>
+    <div class="game-container">
+        <h1 class="title">⛺ צופן החצר</h1>
+        <p class="subtitle">משחק חידות מסתורי על המשכן הקדוש</p>
+        
+        <div class="progress">
+            <div class="progress-text" id="progress">חידות נכונות: 0/3 | צריך 3 כדי לפתוח את הצופן הסודי</div>
         </div>
         
-        <div id="instructionsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-            <div class="flex items-center justify-center min-h-screen p-4">
-                <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6" dir="rtl">
-                    <h4 class="font-bold text-yellow-800 mb-4 text-xl">איך לשחק:</h4>
-                    <ul class="text-gray-700 space-y-2 mb-6">
-                        <li>1. לחץ על "גלגל קובייה" כדי לקבל שאלה אקראית</li>
-                        <li>2. קרא את השאלה בעיון</li>
-                        <li>3. כתוב את התשובה שלך בתיבת הטקסט</li>
-                        <li>4. לחץ על "שלח תשובה" כדי לראות אם אתה צודק</li>
-                        <li>5. צבור נקודות עבור תשובות נכונות!</li>
-                    </ul>
-                    <button id="closeInstructions" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">
-                        סגור
-                    </button>
+        <div id="riddle-section">
+            <div class="riddle-container">
+                <div class="riddle-text" id="riddle-text">
+                    🕯️ חידה ראשונה:<br>
+                    "אני עומד במרכז המשכן, עליי שולחן הלחם ומנורת הזהב. מה שמי?"
                 </div>
+                <div class="input-container">
+                    <input type="text" id="answer-input" placeholder="הכנס את התשובה כאן...">
+                    <button class="btn" onclick="checkAnswer()">בדוק תשובה</button>
+                </div>
+                <div id="feedback" class="feedback hidden"></div>
+            </div>
+        </div>
+        
+        <div id="final-challenge" class="hidden">
+            <div class="riddle-container final-challenge">
+                <div class="riddle-text">
+                    ⛺ הצופן הסודי - צופן החצר!<br><br>
+                    עכשיו הגיע הזמן לפתור את הצופן הגדול...<br><br>
+                    חשב את המספר הסודי על ידי חיבור של:<br>
+                    • אורך החצר של המשכן (באמות)<br>
+                    • רוחב החצר של המשכן (באמות)<br>
+                    • מספר העמודים שמקיפים את החצר<br><br>
+                    💡 עליך לזכור או לגלות את המספרים בעצמך!
+                </div>
+                <div class="input-container">
+                    <input type="number" id="code-input" placeholder="הכנס את המספר הסודי...">
+                    <button class="btn" onclick="checkFinalCode()">פתור צופן!</button>
+                </div>
+                <div id="final-feedback" class="feedback hidden"></div>
+            </div>
+        </div>
+        
+        <div id="victory-section" class="hidden">
+            <div class="victory">
+                <h2>🎉 כל הכבוד! פתרת את הצופן! 🎉</h2>
+                <p>הצלחת לגלות את סוד החצר הקדושה!</p>
+                <p>המספר הסודי היה: <span id="final-number"></span></p>
+                <br>
+                <button class="btn" onclick="restartGame()" style="background: white; color: #228b22;">שחק שוב</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Game data
-        const questions = [
+        let correctAnswers = 0;
+        let currentRiddle = 0;
+        let finalAttempts = 0;
+        
+        const riddles = [
             {
-                question: "מי היה פינחס ומה הוא עשה כדי לקבל ברית שלום?",
-                expected_keywords: ["פינחס", "זמרי", "כזבי", "מגפה", "שלום", "ברית", "הרג", "עצר"],
-                correct_answer: "פינחס הרג את זמרי וכזבי ועצר את המגפה. אלוהים גמל לו בברית שלום."
+                question: '🔹 חידה ראשונה:<br>"נחושת אותי מכסה,<br>וקורבנות עולים ממני לגובה.<br>ארבע קרנות לי,<br>ואש בי תמיד, אך אינני מנורה.<br>מי אני?"',
+                answers: ['מזבח העולה', 'מזבח', 'המזבח'],
+                correctFeedback: '🔥 מושלם! מזבח העולה - הלב הבוער של החצר הקדושה!',
+                incorrectFeedback: '🤔 חשוב על מה שעשוי נחושת ובוער תמיד בחצר...'
             },
             {
-                question: "איזה שכר קיבל פינחס על מעשיו?",
-                expected_keywords: ["ברית", "שלום", "נצח", "כהונה", "עולם", "שכר"],
-                correct_answer: "הוא קיבל ברית שלום וכהונת עולם."
+                question: '🔹 חידה שנייה:<br>"לא מקריבים עליי,<br>אך בלעדיי – אין כניסה לעבודה.<br>נוצרתי מהשתקפויות נשים,<br>וממני נוטלים חיים של טהרה.<br>מי אני?"',
+                answers: ['הכיור', 'כיור'],
+                correctFeedback: '💧 נכון! הכיור - מקור הטהרה לכהנים!',
+                incorrectFeedback: '💭 חשוב על מה שעשוי ממראות נשים ומשמש לטהרה...'
             },
             {
-                question: "מה עשו בנות צלפחד בפרשה זו?",
-                expected_keywords: ["נחלה", "אדמה", "בקשה", "משה", "צלפחד", "בנות", "לרשת", "בנים"],
-                correct_answer: "הן ביקשו את הזכות לרשת את אדמת אביהן מכיוון שלא היו לו בנים, ואלוהים הסכים."
+                question: '🔹 חידה שלישית:<br>"אני חומה בלי אבנים,<br>שקופה למחצה אך לא עוברים דרכי.<br>מתוח על שישים עמודים,<br>גבול שקט בין חול לקודש.<br>מי אני?"',
+                answers: ['קלעי החצר', 'קלעים', 'הקלעים'],
+                correctFeedback: '🏛️ מצוין! קלעי החצר - הגבול הקדוש של המשכן!',
+                incorrectFeedback: '🔍 חשוב על מה שמקיף את החצר על עמודים...'
             },
             {
-                question: "למה הייתה מגפה בין בני ישראל בפרשה זו?",
-                expected_keywords: ["בעל", "פעור", "מואבית", "מדינית", "נשים", "עבודה זרה", "חטא"],
-                correct_answer: "בני ישראל חטאו בעבודת בעל פעור ובקרבה עם נשים מואביות ומדיניות."
+                question: '🔹 חידה רביעית:<br>"פעמיים בשנה לא רואים אותי כלל,<br>ופעם אחת – בחרדת קודש.<br>בין כנפיים אני שוכן,<br>אך אינני עף לשום מקום.<br>מי אני?"',
+                answers: ['ארון הברית', 'הארון', 'ארון'],
+                correctFeedback: '📿 נפלא! ארון הברית - הקודש הגדול ביותר!',
+                incorrectFeedback: '💡 חשוב על מה שנמצא בקודש הקדשים בין כנפי הכרובים...'
             },
             {
-                question: "מה היה מיוחד במפקד שנערך בפרשה זו?",
-                expected_keywords: ["מפקד", "ספירה", "אדמה", "נחלה", "שבטים", "חלוקה", "חלקים"],
-                correct_answer: "המפקד הזה נערך כדי לקבוע איך תתחלק ארץ הקודש בין השבטים."
+                question: '🔹 חידה חמישית:<br>"אני לא נושא דבר,<br>אך ריחי חודר עד הלב.<br>אני לא בוער באש רגילה,<br>ואין לי קרניים – אך עמוד עשן עולה ממני.<br>מי אני?"',
+                answers: ['מזבח הקטורת', 'מזבח קטורת', 'הקטורת'],
+                correctFeedback: '🌟 מושלם! מזבח הקטורת - הריח הקדוש העולה לשמים!',
+                incorrectFeedback: '🕊️ חשוב על מה שמעלה ריח נעים בקדש...'
             },
             {
-                question: "מה קרה למשה בנוגע לארץ הקודש בפרשה זו?",
-                expected_keywords: ["משה", "הר", "ראה", "אדמה", "מת", "יהושע", "מנהיג"],
-                correct_answer: "אלוהים אמר למשה לעלות להר עברים כדי לראות את ארץ הקודש לפני מותו, ולמנות את יהושע כמנהיג החדש."
+                question: '🔹 חידה שישית:<br>"אני משביע אך לא נאכל,<br>זהבי שומר סדר תמידי.<br>שתים עשרה פעמים אני מחזיק,<br>אך רק פעם בשבוע טועמים אותי.<br>מי אני?"',
+                answers: ['שולחן לחם הפנים', 'שולחן', 'לחם הפנים'],
+                correctFeedback: '🍞 נכון מאוד! שולחן לחם הפנים - המזון הקדוש!',
+                incorrectFeedback: '🤔 חשוב על מה שעשוי זהב ומחזיק לחם...'
+            },
+            {
+                question: '🔹 חידה שביעית:<br>"לא מדברת – אך מאירה,<br>לא בוערת – אך אור נמשך ממנה.<br>היא נולדה כולה מגוש אחד,<br>וקול נשמע ממנה... רק בלב.<br>מי היא?"',
+                answers: ['המנורה', 'מנורה', 'מנורת הזהב'],
+                correctFeedback: '✨ מדהים! המנורה - האור הנצחי של הקדש!',
+                incorrectFeedback: '💭 חשוב על מה שמאיר בקדש ועשוי מגוש זהב אחד...'
             }
         ];
-
-        // Game state
-        let currentQuestion = null;
-        let score = 0;
-        let usedQuestions = [];
-
-        // DOM elements
-        const rollButton = document.getElementById('rollButton');
-        const dice = document.getElementById('dice');
-        const diceDisplay = document.getElementById('diceDisplay');
-        const questionSection = document.getElementById('questionSection');
-        const questionText = document.getElementById('questionText');
-        const answerInput = document.getElementById('answerInput');
-        const submitButton = document.getElementById('submitButton');
-        const feedbackSection = document.getElementById('feedbackSection');
-        const feedbackContent = document.getElementById('feedbackContent');
-        const nextButton = document.getElementById('nextButton');
-        const scoreDisplay = document.getElementById('score');
-        const instructionsButton = document.getElementById('instructionsButton');
-        const instructionsModal = document.getElementById('instructionsModal');
-        const closeInstructions = document.getElementById('closeInstructions');
-
-        // Dice faces
-        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-
-        // Event listeners
-        rollButton.addEventListener('click', rollDice);
-        submitButton.addEventListener('click', submitAnswer);
-        nextButton.addEventListener('click', resetForNextRound);
-        instructionsButton.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
-        closeInstructions.addEventListener('click', () => instructionsModal.classList.add('hidden'));
-        instructionsModal.addEventListener('click', (e) => {
-            if (e.target === instructionsModal) instructionsModal.classList.add('hidden');
-        });
-        answerInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                submitAnswer();
+        
+        // The secret code: 100 (length) + 50 (width) + 60 (pillars) = 210
+        const SECRET_CODE = 210;
+        
+        function updateProgress() {
+            document.getElementById('progress').textContent = 
+                `חידות נכונות: ${correctAnswers}/3 | ${correctAnswers >= 3 ? 'הצופן נפתח!' : 'צריך 3 כדי לפתוח את הצופן הסודי'}`;
+        }
+        
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback ${type}`;
+            feedback.classList.remove('hidden');
+        }
+        
+        function nextRiddle() {
+            currentRiddle++;
+            if (currentRiddle < riddles.length && correctAnswers < 3) {
+                const riddle = riddles[currentRiddle];
+                document.getElementById('riddle-text').innerHTML = riddle.question;
+                document.getElementById('answer-input').value = '';
+                document.getElementById('feedback').classList.add('hidden');
+            } else if (correctAnswers >= 3) {
+                showFinalChallenge();
+            } else {
+                // If we've gone through all riddles but don't have 3 correct, cycle back
+                currentRiddle = 0;
+                const riddle = riddles[currentRiddle];
+                document.getElementById('riddle-text').innerHTML = riddle.question;
+                document.getElementById('answer-input').value = '';
+                document.getElementById('feedback').classList.add('hidden');
             }
-        });
-
-        function rollDice() {
-            // Add rolling animation
-            dice.classList.add('rolling');
-            rollButton.disabled = true;
-            rollButton.textContent = 'מגלגל...';
-
-            // Animate dice faces
-            let rollCount = 0;
-            const rollInterval = setInterval(() => {
-                const randomFace = diceFaces[Math.floor(Math.random() * 6)];
-                diceDisplay.textContent = randomFace;
-                rollCount++;
-                
-                if (rollCount >= 8) {
-                    clearInterval(rollInterval);
-                    finishRoll();
-                }
-            }, 100);
         }
-
-        function finishRoll() {
-            // Final dice result
-            const diceResult = Math.floor(Math.random() * 6) + 1;
-            diceDisplay.textContent = diceFaces[diceResult - 1];
-            
-            // Remove rolling animation
-            dice.classList.remove('rolling');
-            dice.classList.add('bounce');
-            
-            setTimeout(() => {
-                dice.classList.remove('bounce');
-                showQuestion();
-            }, 600);
-        }
-
-        function showQuestion() {
-            // Reset used questions if all have been used
-            if (usedQuestions.length >= questions.length) {
-                usedQuestions = [];
-            }
-
-            // Get a random unused question
-            let availableQuestions = questions.filter((_, index) => !usedQuestions.includes(index));
-            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-            const questionIndex = questions.indexOf(availableQuestions[randomIndex]);
-            
-            currentQuestion = questions[questionIndex];
-            usedQuestions.push(questionIndex);
-
-            // Display question
-            questionText.textContent = currentQuestion.question;
-            questionSection.classList.remove('hidden');
-            answerInput.value = '';
-            answerInput.focus();
-
-            // Hide feedback and reset button
-            feedbackSection.classList.add('hidden');
-            rollButton.textContent = 'גלגל קובייה!';
-            rollButton.disabled = false;
-        }
-
-        function submitAnswer() {
-            const userAnswer = answerInput.value.trim().toLowerCase();
-            
+        
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer-input').value.trim();
             if (!userAnswer) {
-                alert('אנא הכנס תשובה לפני השליחה!');
+                showFeedback('אנא הכנס תשובה!', 'incorrect');
                 return;
             }
-
-            // Check if answer contains expected keywords
-            const keywordMatches = currentQuestion.expected_keywords.filter(keyword => 
-                userAnswer.includes(keyword.toLowerCase())
+            
+            const riddle = riddles[currentRiddle];
+            const isCorrect = riddle.answers.some(answer => 
+                userAnswer.toLowerCase().includes(answer.toLowerCase())
             );
-
-            const isCorrect = keywordMatches.length >= 2; // Need at least 2 keywords for correct answer
-
-            // Show feedback
-            showFeedback(isCorrect, keywordMatches);
-        }
-
-        function showFeedback(isCorrect, keywordMatches) {
-            feedbackSection.classList.remove('hidden');
             
             if (isCorrect) {
-                score += 10;
-                scoreDisplay.textContent = score;
-                feedbackSection.className = 'bg-green-100 border border-green-400 rounded-lg p-6 mb-6';
-                feedbackContent.innerHTML = `
-                    <div class="text-green-800" dir="rtl">
-                        <h4 class="font-bold text-lg mb-2">✅ נכון! כל הכבוד!</h4>
-                        <p class="mb-2">זכית ב-10 נקודות!</p>
-                        <p class="text-sm"><strong>מושגי מפתח שהזכרת:</strong> ${keywordMatches.join(', ')}</p>
-                    </div>
-                `;
+                correctAnswers++;
+                updateProgress();
+                showFeedback(riddle.correctFeedback, 'correct');
+                
+                setTimeout(() => {
+                    if (correctAnswers >= 3) {
+                        showFinalChallenge();
+                    } else {
+                        nextRiddle();
+                    }
+                }, 2000);
             } else {
-                feedbackSection.className = 'bg-red-100 border border-red-400 rounded-lg p-6 mb-6';
-                feedbackContent.innerHTML = `
-                    <div class="text-red-800" dir="rtl">
-                        <h4 class="font-bold text-lg mb-2">❌ לא בדיוק נכון</h4>
-                        <p class="mb-3"><strong>התשובה הנכונה היא:</strong></p>
-                        <p class="bg-white p-3 rounded border italic">${currentQuestion.correct_answer}</p>
-                        ${keywordMatches.length > 0 ? `<p class="text-sm mt-2"><strong>כן הזכרת:</strong> ${keywordMatches.join(', ')}</p>` : ''}
-                    </div>
-                `;
+                showFeedback(riddle.incorrectFeedback, 'incorrect');
             }
-
-            // Scroll to feedback
-            feedbackSection.scrollIntoView({ behavior: 'smooth' });
         }
-
-        function resetForNextRound() {
-            questionSection.classList.add('hidden');
-            feedbackSection.classList.add('hidden');
-            diceDisplay.textContent = '🎲';
+        
+        function showFinalChallenge() {
+            document.getElementById('riddle-section').classList.add('hidden');
+            document.getElementById('final-challenge').classList.remove('hidden');
         }
-
-        // Initialize score display
-        scoreDisplay.textContent = score;
+        
+        function checkFinalCode() {
+            const userCode = parseInt(document.getElementById('code-input').value);
+            const finalFeedback = document.getElementById('final-feedback');
+            
+            if (isNaN(userCode)) {
+                finalFeedback.textContent = 'אנא הכנס מספר תקין!';
+                finalFeedback.className = 'feedback incorrect';
+                finalFeedback.classList.remove('hidden');
+                return;
+            }
+            
+            if (userCode === SECRET_CODE) {
+                showVictory();
+            } else {
+                finalAttempts++;
+                
+                if (finalAttempts === 1) {
+                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: חצר המשכן הייתה מלבן גדול, והיו עמודים רבים מסביב.<br>נסה שוב!`;
+                    finalFeedback.className = 'feedback hint';
+                } else {
+                    finalFeedback.innerHTML = `💡 רמז נוסף:<br>אורך החצר: 100 אמות<br>רוחב החצר: 50 אמות<br>מספר העמודים: 60<br>חבר את כל המספרים!`;
+                    finalFeedback.className = 'feedback hint';
+                }
+                
+                finalFeedback.classList.remove('hidden');
+            }
+        }
+        
+        function showVictory() {
+            document.getElementById('final-challenge').classList.add('hidden');
+            document.getElementById('victory-section').classList.remove('hidden');
+            document.getElementById('final-number').textContent = SECRET_CODE;
+        }
+        
+        function restartGame() {
+            correctAnswers = 0;
+            currentRiddle = 0;
+            finalAttempts = 0;
+            
+            updateProgress();
+            
+            document.getElementById('riddle-section').classList.remove('hidden');
+            document.getElementById('final-challenge').classList.add('hidden');
+            document.getElementById('victory-section').classList.add('hidden');
+            
+            const firstRiddle = riddles[0];
+            document.getElementById('riddle-text').innerHTML = firstRiddle.question;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('code-input').value = '';
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('final-feedback').classList.add('hidden');
+        }
+        
+        // Allow Enter key to submit answers
+        document.getElementById('answer-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        document.getElementById('code-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkFinalCode();
+            }
+        });
+        
+        // Initialize the game
+        updateProgress();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9625252ee30c8e45',t:'MTc1MzA0MjY4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9625999875908e44',t:'MTc1MzA0NzQ0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
