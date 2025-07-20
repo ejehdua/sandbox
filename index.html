@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torah Dice Game - Parashat Pinchas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes roll {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .rolling {
+            animation: roll 0.5s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .bounce {
+            animation: bounce 0.6s;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-100 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8" dir="rtl">
+            <h1 class="text-4xl font-bold text-purple-800 mb-2">🎲 משחק קוביות תורה</h1>
+            <h2 class="text-2xl text-blue-700 mb-4">פרשת פינחס</h2>
+            <div class="bg-white rounded-lg shadow-md p-4 inline-block">
+                <p class="text-gray-700">גלגל את הקובייה כדי לקבל שאלה על הפרשה!</p>
+                <div class="mt-2">
+                    <span class="text-lg font-semibold text-green-600">ניקוד: </span>
+                    <span id="score" class="text-lg font-bold text-green-700">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dice Section -->
+        <div class="text-center mb-8">
+            <div id="dice" class="inline-block bg-gradient-to-br from-white to-gray-100 rounded-2xl shadow-2xl p-12 mb-6 border-4 border-purple-200">
+                <div class="text-9xl" id="diceDisplay">🎲</div>
+            </div>
+            <br>
+            <button id="rollButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-10 rounded-xl text-2xl shadow-lg transform hover:scale-105 transition-all duration-200" dir="rtl">
+                גלגל קובייה!
+            </button>
+        </div>
+
+        <!-- Question Section -->
+        <div id="questionSection" class="bg-white rounded-lg shadow-lg p-6 mb-6 hidden" dir="rtl">
+            <h3 class="text-xl font-bold text-purple-800 mb-4">שאלה:</h3>
+            <p id="questionText" class="text-lg text-gray-800 mb-6 leading-relaxed"></p>
+            
+            <div class="mb-4">
+                <label for="answerInput" class="block text-sm font-medium text-gray-700 mb-2">התשובה שלך:</label>
+                <textarea id="answerInput" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none" placeholder="כתוב את התשובה שלך כאן..."></textarea>
+            </div>
+            
+            <button id="submitButton" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transform hover:scale-105 transition-all duration-200">
+                שלח תשובה
+            </button>
+        </div>
+
+        <!-- Feedback Section -->
+        <div id="feedbackSection" class="rounded-lg p-6 mb-6 hidden" dir="rtl">
+            <div id="feedbackContent"></div>
+            <button id="nextButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md mt-4 transform hover:scale-105 transition-all duration-200">
+                גלגל שוב
+            </button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="text-center">
+            <button id="instructionsButton" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transform hover:scale-105 transition-all duration-200" dir="rtl">
+                איך לשחק?
+            </button>
+        </div>
+        
+        <div id="instructionsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6" dir="rtl">
+                    <h4 class="font-bold text-yellow-800 mb-4 text-xl">איך לשחק:</h4>
+                    <ul class="text-gray-700 space-y-2 mb-6">
+                        <li>1. לחץ על "גלגל קובייה" כדי לקבל שאלה אקראית</li>
+                        <li>2. קרא את השאלה בעיון</li>
+                        <li>3. כתוב את התשובה שלך בתיבת הטקסט</li>
+                        <li>4. לחץ על "שלח תשובה" כדי לראות אם אתה צודק</li>
+                        <li>5. צבור נקודות עבור תשובות נכונות!</li>
+                    </ul>
+                    <button id="closeInstructions" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">
+                        סגור
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data
+        const questions = [
+            {
+                question: "מי היה פינחס ומה הוא עשה כדי לקבל ברית שלום?",
+                expected_keywords: ["פינחס", "זמרי", "כזבי", "מגפה", "שלום", "ברית", "הרג", "עצר"],
+                correct_answer: "פינחס הרג את זמרי וכזבי ועצר את המגפה. אלוהים גמל לו בברית שלום."
+            },
+            {
+                question: "איזה שכר קיבל פינחס על מעשיו?",
+                expected_keywords: ["ברית", "שלום", "נצח", "כהונה", "עולם", "שכר"],
+                correct_answer: "הוא קיבל ברית שלום וכהונת עולם."
+            },
+            {
+                question: "מה עשו בנות צלפחד בפרשה זו?",
+                expected_keywords: ["נחלה", "אדמה", "בקשה", "משה", "צלפחד", "בנות", "לרשת", "בנים"],
+                correct_answer: "הן ביקשו את הזכות לרשת את אדמת אביהן מכיוון שלא היו לו בנים, ואלוהים הסכים."
+            },
+            {
+                question: "למה הייתה מגפה בין בני ישראל בפרשה זו?",
+                expected_keywords: ["בעל", "פעור", "מואבית", "מדינית", "נשים", "עבודה זרה", "חטא"],
+                correct_answer: "בני ישראל חטאו בעבודת בעל פעור ובקרבה עם נשים מואביות ומדיניות."
+            },
+            {
+                question: "מה היה מיוחד במפקד שנערך בפרשה זו?",
+                expected_keywords: ["מפקד", "ספירה", "אדמה", "נחלה", "שבטים", "חלוקה", "חלקים"],
+                correct_answer: "המפקד הזה נערך כדי לקבוע איך תתחלק ארץ הקודש בין השבטים."
+            },
+            {
+                question: "מה קרה למשה בנוגע לארץ הקודש בפרשה זו?",
+                expected_keywords: ["משה", "הר", "ראה", "אדמה", "מת", "יהושע", "מנהיג"],
+                correct_answer: "אלוהים אמר למשה לעלות להר עברים כדי לראות את ארץ הקודש לפני מותו, ולמנות את יהושע כמנהיג החדש."
+            }
+        ];
+
+        // Game state
+        let currentQuestion = null;
+        let score = 0;
+        let usedQuestions = [];
+
+        // DOM elements
+        const rollButton = document.getElementById('rollButton');
+        const dice = document.getElementById('dice');
+        const diceDisplay = document.getElementById('diceDisplay');
+        const questionSection = document.getElementById('questionSection');
+        const questionText = document.getElementById('questionText');
+        const answerInput = document.getElementById('answerInput');
+        const submitButton = document.getElementById('submitButton');
+        const feedbackSection = document.getElementById('feedbackSection');
+        const feedbackContent = document.getElementById('feedbackContent');
+        const nextButton = document.getElementById('nextButton');
+        const scoreDisplay = document.getElementById('score');
+        const instructionsButton = document.getElementById('instructionsButton');
+        const instructionsModal = document.getElementById('instructionsModal');
+        const closeInstructions = document.getElementById('closeInstructions');
+
+        // Dice faces
+        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+
+        // Event listeners
+        rollButton.addEventListener('click', rollDice);
+        submitButton.addEventListener('click', submitAnswer);
+        nextButton.addEventListener('click', resetForNextRound);
+        instructionsButton.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
+        closeInstructions.addEventListener('click', () => instructionsModal.classList.add('hidden'));
+        instructionsModal.addEventListener('click', (e) => {
+            if (e.target === instructionsModal) instructionsModal.classList.add('hidden');
+        });
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitAnswer();
+            }
+        });
+
+        function rollDice() {
+            // Add rolling animation
+            dice.classList.add('rolling');
+            rollButton.disabled = true;
+            rollButton.textContent = 'מגלגל...';
+
+            // Animate dice faces
+            let rollCount = 0;
+            const rollInterval = setInterval(() => {
+                const randomFace = diceFaces[Math.floor(Math.random() * 6)];
+                diceDisplay.textContent = randomFace;
+                rollCount++;
+                
+                if (rollCount >= 8) {
+                    clearInterval(rollInterval);
+                    finishRoll();
+                }
+            }, 100);
+        }
+
+        function finishRoll() {
+            // Final dice result
+            const diceResult = Math.floor(Math.random() * 6) + 1;
+            diceDisplay.textContent = diceFaces[diceResult - 1];
+            
+            // Remove rolling animation
+            dice.classList.remove('rolling');
+            dice.classList.add('bounce');
+            
+            setTimeout(() => {
+                dice.classList.remove('bounce');
+                showQuestion();
+            }, 600);
+        }
+
+        function showQuestion() {
+            // Reset used questions if all have been used
+            if (usedQuestions.length >= questions.length) {
+                usedQuestions = [];
+            }
+
+            // Get a random unused question
+            let availableQuestions = questions.filter((_, index) => !usedQuestions.includes(index));
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            const questionIndex = questions.indexOf(availableQuestions[randomIndex]);
+            
+            currentQuestion = questions[questionIndex];
+            usedQuestions.push(questionIndex);
+
+            // Display question
+            questionText.textContent = currentQuestion.question;
+            questionSection.classList.remove('hidden');
+            answerInput.value = '';
+            answerInput.focus();
+
+            // Hide feedback and reset button
+            feedbackSection.classList.add('hidden');
+            rollButton.textContent = 'גלגל קובייה!';
+            rollButton.disabled = false;
+        }
+
+        function submitAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            if (!userAnswer) {
+                alert('אנא הכנס תשובה לפני השליחה!');
+                return;
+            }
+
+            // Check if answer contains expected keywords
+            const keywordMatches = currentQuestion.expected_keywords.filter(keyword => 
+                userAnswer.includes(keyword.toLowerCase())
+            );
+
+            const isCorrect = keywordMatches.length >= 2; // Need at least 2 keywords for correct answer
+
+            // Show feedback
+            showFeedback(isCorrect, keywordMatches);
+        }
+
+        function showFeedback(isCorrect, keywordMatches) {
+            feedbackSection.classList.remove('hidden');
+            
+            if (isCorrect) {
+                score += 10;
+                scoreDisplay.textContent = score;
+                feedbackSection.className = 'bg-green-100 border border-green-400 rounded-lg p-6 mb-6';
+                feedbackContent.innerHTML = `
+                    <div class="text-green-800" dir="rtl">
+                        <h4 class="font-bold text-lg mb-2">✅ נכון! כל הכבוד!</h4>
+                        <p class="mb-2">זכית ב-10 נקודות!</p>
+                        <p class="text-sm"><strong>מושגי מפתח שהזכרת:</strong> ${keywordMatches.join(', ')}</p>
+                    </div>
+                `;
+            } else {
+                feedbackSection.className = 'bg-red-100 border border-red-400 rounded-lg p-6 mb-6';
+                feedbackContent.innerHTML = `
+                    <div class="text-red-800" dir="rtl">
+                        <h4 class="font-bold text-lg mb-2">❌ לא בדיוק נכון</h4>
+                        <p class="mb-3"><strong>התשובה הנכונה היא:</strong></p>
+                        <p class="bg-white p-3 rounded border italic">${currentQuestion.correct_answer}</p>
+                        ${keywordMatches.length > 0 ? `<p class="text-sm mt-2"><strong>כן הזכרת:</strong> ${keywordMatches.join(', ')}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Scroll to feedback
+            feedbackSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForNextRound() {
+            questionSection.classList.add('hidden');
+            feedbackSection.classList.add('hidden');
+            diceDisplay.textContent = '🎲';
+        }
+
+        // Initialize score display
+        scoreDisplay.textContent = score;
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9625252ee30c8e45',t:'MTc1MzA0MjY4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
