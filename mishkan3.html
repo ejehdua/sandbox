@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צופן הקודש</title>
+    <title>צופן קודש הקודשים</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
         
@@ -15,286 +15,374 @@
         
         body {
             font-family: 'Heebo', sans-serif;
-            background: transparent;
+            background: white;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
-            position: relative;
+            overflow-x: auto;
         }
         
         .game-container {
             background: linear-gradient(145deg, rgba(255, 248, 220, 0.98), rgba(255, 245, 238, 0.95));
             border-radius: 15px;
             padding: 15px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 85vh;
+            max-width: 600px;
+            margin: 0 auto;
             box-shadow: 
-                0 10px 20px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                0 0 15px rgba(255, 215, 0, 0.15);
-            border: 2px solid #daa520;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .game-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, #daa520, #ffd700, #ffef94, #ffd700, #daa520);
-            box-shadow: 0 2px 10px rgba(218, 165, 32, 0.5);
-        }
-        
-        .game-container::after {
-            content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(218, 165, 32, 0.4);
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 3px solid #daa520;
         }
         
         .title {
             text-align: center;
             color: #8b4513;
-            font-size: 1.6rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 5px;
-            text-shadow: 
-                2px 2px 4px rgba(0, 0, 0, 0.2),
-                0 0 15px rgba(255, 215, 0, 0.3);
-            position: relative;
-        }
-        
-        .title::before {
-            content: '✨';
-            position: absolute;
-            left: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            animation: sparkle 2s ease-in-out infinite;
-        }
-        
-        .title::after {
-            content: '✨';
-            position: absolute;
-            right: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            animation: sparkle 2s ease-in-out infinite 1s;
-        }
-        
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
-            50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .subtitle {
             text-align: center;
             color: #a0522d;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            font-weight: 400;
-        }
-        
-        .progress {
-            background: #f4e4bc;
-            border-radius: 6px;
-            padding: 6px;
-            margin-bottom: 8px;
-            border: 1px solid #daa520;
-        }
-        
-        .progress-text {
-            color: #8b4513;
-            font-weight: 600;
-            text-align: center;
-            font-size: 0.8rem;
-        }
-        
-        .riddle-container {
-            background: linear-gradient(145deg, #ffffff, #fefefe);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border: 1px solid #daa520;
-            box-shadow: 
-                0 4px 10px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            position: relative;
-        }
-        
-        .riddle-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #daa520, #ffd700, #daa520);
-            border-radius: 20px;
-            z-index: -1;
-        }
-        
-        .riddle-text {
-            color: #8b4513;
-            font-size: 0.9rem;
-            line-height: 1.3;
-            margin-bottom: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
             font-weight: 500;
-            text-align: center;
         }
         
-        .input-container {
+        .tabernacle-layout {
+            margin-bottom: 15px;
             display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
             justify-content: center;
         }
         
-        input[type="text"], input[type="number"] {
-            flex: 1;
-            max-width: 200px;
-            padding: 8px 12px;
-            border: 1px solid #daa520;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-family: 'Heebo', sans-serif;
-            text-align: center;
-            background: linear-gradient(145deg, #fafafa, #ffffff);
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+        .courtyard {
+            background: linear-gradient(135deg, #f4e4bc, #e6d3a3);
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            padding: 8px;
+            position: relative;
+            min-height: 150px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
         }
         
-        input[type="text"]:focus, input[type="number"]:focus {
-            outline: none;
-            border-color: #b8860b;
-            box-shadow: 0 0 10px rgba(218, 165, 32, 0.3);
+        .area-title {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff8dc;
+            padding: 2px 8px;
+            border: 2px solid #8b4513;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #8b4513;
+            font-size: 0.7rem;
+        }
+        
+        .courtyard-drop-zone {
+            min-height: 40px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .kodesh {
+            background: linear-gradient(135deg, #fff8dc, #f0e68c);
+            border: 2px solid #daa520;
+            border-radius: 6px;
+            padding: 6px;
+            position: relative;
+            min-height: 90px;
+            width: 85%;
+            margin: auto auto 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .kodesh-drop-zone {
+            min-height: 30px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+            justify-items: center;
+            align-items: center;
+        }
+        
+        .kodesh-drop-zone .drop-circle:nth-child(1) {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .kodesh-drop-zone .drop-circle:nth-child(2) {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        
+        .kodesh-drop-zone .drop-circle:nth-child(3) {
+            grid-column: 1 / 3;
+            grid-row: 2;
+        }
+        
+        .kodesh-kodashim {
+            background: linear-gradient(135deg, #ffd700, #ffef94);
+            border: 2px solid #b8860b;
+            border-radius: 4px;
+            padding: 4px;
+            position: relative;
+            min-height: 40px;
+            width: 70%;
+            margin: auto auto 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .vessels-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border: 2px dashed #daa520;
+        }
+        
+        .vessel {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+            border: 2px solid;
+            position: relative;
+            user-select: none;
+        }
+        
+        .vessel:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .vessel.dragging {
+            cursor: grabbing;
+            transform: rotate(5deg) scale(1.1);
+            z-index: 1000;
+        }
+        
+        .vessel.bronze {
+            background: linear-gradient(135deg, #cd7f32, #b87333);
+            border-color: #8b4513;
+            color: #2f1b14;
+        }
+        
+        .vessel.gold {
+            background: linear-gradient(135deg, #ffd700, #ffef94);
+            border-color: #daa520;
+            color: #8b4513;
+        }
+        
+        .vessel-tooltip {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1001;
+        }
+        
+        .vessel:hover .vessel-tooltip {
+            opacity: 1;
+        }
+        
+        .drop-circle {
+            width: 50px;
+            height: 50px;
+            border: 3px dashed #ccc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .drop-circle.drag-over {
+            border-color: #32cd32;
+            background: rgba(50, 205, 50, 0.1);
+        }
+        
+        .drop-circle.correct {
+            background: rgba(50, 205, 50, 0.2);
+            border-color: #32cd32;
+        }
+        
+        .drop-circle.incorrect {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: #ff0000;
+        }
+        
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed transparent;
+            border-radius: 8px;
+            padding: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
         .btn {
             background: linear-gradient(135deg, #daa520, #b8860b);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Heebo', sans-serif;
-            box-shadow: 
-                0 2px 8px rgba(218, 165, 32, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
         }
         
         .btn:hover {
             background: linear-gradient(135deg, #b8860b, #daa520);
-            transform: translateY(-3px);
-            box-shadow: 
-                0 6px 20px rgba(218, 165, 32, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
         }
         
-        .btn:hover::before {
-            left: 100%;
+        .btn.check-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            font-size: 1.2rem;
+            padding: 15px 30px;
         }
         
-        .feedback {
-            padding: 6px;
-            border-radius: 6px;
-            margin-top: 6px;
-            font-weight: 500;
-            text-align: center;
-            font-size: 0.8rem;
+        .btn.check-btn:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
         }
         
-        .hint-section {
-            margin-top: 6px;
-            margin-bottom: 6px;
-        }
-        
-        .hint-btn {
+        .hint-icon {
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #8b7355, #6b5b47);
-            color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Heebo', sans-serif;
-            margin-left: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .hint-btn:hover {
+        .hint-icon:hover {
             background: linear-gradient(135deg, #6b5b47, #8b7355);
-            transform: translateY(-1px);
+            transform: scale(1.1);
         }
         
-        .hint-display {
-            background: #fff8dc;
-            border: 1px solid #daa520;
-            border-radius: 6px;
-            padding: 6px;
-            margin-top: 4px;
-            color: #8b4513;
-            font-size: 0.8rem;
+        .reset-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .reset-icon:hover {
+            background: linear-gradient(135deg, #c82333, #dc3545);
+            transform: scale(1.1);
+        }
+        
+        .results {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
             text-align: center;
+            border: 2px solid #daa520;
         }
         
-        .first-letter-btn {
-            background: linear-gradient(135deg, #cd853f, #a0522d);
-            font-size: 0.85rem;
-            padding: 6px 12px;
+        .score {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8b4513;
+            margin-bottom: 10px;
         }
         
-        .feedback.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 2px solid #c3e6cb;
-        }
-        
-        .feedback.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 2px solid #f5c6cb;
-        }
-        
-        .feedback.hint {
+        .hints {
             background: #fff3cd;
-            color: #856404;
             border: 2px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
         }
         
-        .final-challenge {
+        .hints.show {
+            display: block;
+        }
+        
+        .hint-item {
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .final-cipher {
             background: linear-gradient(135deg, #2c1810, #8b4513);
             color: #ffd700;
             border: 3px solid #daa520;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
             animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        .final-cipher.show {
+            display: block;
         }
         
         @keyframes glow {
@@ -302,179 +390,96 @@
             to { box-shadow: 0 0 30px rgba(218, 165, 32, 0.8); }
         }
         
-        .final-challenge .riddle-text {
-            color: #ffd700;
-            font-size: 1.3rem;
-        }
-        
-        .victory {
-            background: linear-gradient(135deg, #228b22, #32cd32);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            border-radius: 10px;
-            animation: celebrate 1s ease-in-out;
-        }
-        
-        @keyframes celebrate {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .victory h2 {
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-        }
-        
-        .verse-hint-btn {
-            background: rgba(255, 215, 0, 0.8);
-            border: 1px solid #daa520;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            margin-right: 5px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .verse-hint-btn:hover {
-            background: #ffd700;
-            transform: scale(1.1);
-        }
-        
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .popup-content {
-            background: linear-gradient(145deg, #fff8dc, #ffeaa7);
-            border: 3px solid #daa520;
-            border-radius: 15px;
-            padding: 20px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .popup-title {
-            color: #8b4513;
-            font-size: 1.2rem;
+        .cipher-text {
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 15px;
         }
         
-        .popup-verse {
-            color: #654321;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            font-style: italic;
+        .cipher-explanation {
+            font-size: 1rem;
+            line-height: 1.5;
         }
         
-        .popup-close {
-            background: linear-gradient(135deg, #daa520, #b8860b);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .popup-close:hover {
-            background: linear-gradient(135deg, #b8860b, #daa520);
-            transform: translateY(-2px);
-        }
-        
-        .courtyard-visual {
-            margin: 15px 0;
+        .compass {
             display: flex;
             justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
         
-        .courtyard-rectangle {
+        .compass-container {
             position: relative;
-            width: 200px;
-            height: 100px;
-            border: 3px solid #daa520;
-            background: linear-gradient(135deg, rgba(255, 248, 220, 0.3), rgba(255, 245, 238, 0.5));
-            border-radius: 8px;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #8b4513;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f4e4bc, #e6d3a3);
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .dimension-label {
+        .compass-needle {
+            width: 2px;
+            height: 30px;
+            background: #dc3545;
             position: absolute;
-            font-size: 0.7rem;
-            font-weight: 600;
+            transform-origin: top center;
+            transform: rotate(0deg);
+        }
+        
+        .compass-needle::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: -3px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 8px solid #dc3545;
+        }
+        
+        .compass-directions {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .compass-directions span {
+            position: absolute;
+            font-size: 0.8rem;
+            font-weight: bold;
             color: #8b4513;
-            background: rgba(255, 248, 220, 0.9);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid #daa520;
         }
         
-        .dimension-label.top {
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .dimension-label.side {
-            right: -45px;
-            top: 50%;
-            transform: translateY(-50%) rotate(90deg);
-            transform-origin: center;
-        }
-        
-        .courtyard-content {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .altar, .laver, .tent {
-            font-size: 1.2rem;
-            opacity: 0.7;
-        }
-        
-        .hidden {
-            display: none;
-        }
+        .compass-directions .north { right: -8px; top: 50%; transform: translateY(-50%); }
+        .compass-directions .south { left: -8px; top: 50%; transform: translateY(-50%); }
+        .compass-directions .east { bottom: -5px; left: 50%; transform: translateX(-50%); }
+        .compass-directions .west { top: -5px; left: 50%; transform: translateX(-50%); }
         
         @media (max-width: 768px) {
             .game-container {
-                padding: 20px;
+                padding: 10px;
                 margin: 10px;
             }
             
-            .title {
-                font-size: 2rem;
+            .vessel {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
             }
             
-            .riddle-text {
-                font-size: 1.1rem;
-            }
-            
-            .input-container {
+            .controls {
                 flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -482,335 +487,370 @@
 <body>
     <div class="game-container">
         <h1 class="title">🗝️ צופן קודש הקודשים</h1>
+        <p class="subtitle">גרור את כלי המשכן למקומם הנכון</p>
         
-        <div class="progress">
-            <div class="progress-text" id="progress">חידות נכונות: 0/3 | צריך 3 כדי לפתוח את הצופן הסודי</div>
-        </div>
-        
-        <div id="riddle-section">
-            <div class="riddle-container">
-                <div class="riddle-text" id="riddle-text">
-                    🕯️ חידה ראשונה:<br>
-                    "אני עומד במרכז המשכן, עליי שולחן הלחם ומנורת הזהב. מה שמי?"
-                </div>
-                <div class="input-container">
-                    <input type="text" id="answer-input" placeholder="הכנס את התשובה כאן...">
-                    <button class="btn" onclick="checkAnswer()">בדוק תשובה</button>
-                </div>
-                <div class="hint-section">
-                    <button id="hint-btn" class="hint-btn" onclick="showHint()">רמז 1/3</button>
-                    <div id="hint-display" class="hint-display hidden"></div>
-                </div>
-                <div id="feedback" class="feedback hidden"></div>
+        <div class="vessels-container">
+            <div class="vessel bronze" draggable="true" data-vessel="altar">
+                🔥
+                <div class="vessel-tooltip">מזבח העולה</div>
+            </div>
+            <div class="vessel bronze" draggable="true" data-vessel="laver">
+                💧
+                <div class="vessel-tooltip">כיור</div>
+            </div>
+            <div class="vessel gold" draggable="true" data-vessel="menorah">
+                🕯️
+                <div class="vessel-tooltip">מנורה</div>
+            </div>
+            <div class="vessel gold" draggable="true" data-vessel="table">
+                🍞
+                <div class="vessel-tooltip">שולחן לחם הפנים</div>
+            </div>
+            <div class="vessel gold" draggable="true" data-vessel="incense">
+                💨
+                <div class="vessel-tooltip">מזבח הקטורת</div>
+            </div>
+            <div class="vessel gold" draggable="true" data-vessel="ark">
+                ⬜
+                <div class="vessel-tooltip">ארון הברית</div>
             </div>
         </div>
         
-        <div id="final-challenge" class="hidden">
-            <div class="riddle-container final-challenge">
-                <div class="riddle-text">
-                    🗝️ הצופן הסודי - צופן קודש הקודשים!<br><br>
-                    עכשיו הגיע הזמן לפתור את הצופן הגדול...<br><br>
-                    חשב את שטח קודש הקודשים:<br>
-                    <strong>אורך × רוחב = ?</strong><br><br>
-                    
-                    <div class="courtyard-visual">
-                        <div class="courtyard-rectangle">
-                            <div class="dimension-label top">אורך: ? אמות</div>
-                            <div class="dimension-label side">רוחב: ? אמות</div>
-                            <div class="courtyard-content">
-                                <div class="altar">👑</div>
-                                <div class="laver">👼</div>
-                                <div class="tent">✨</div>
-                            </div>
-                        </div>
+        <div class="tabernacle-layout">
+            <div class="courtyard">
+                <div class="area-title">חצר המשכן</div>
+                <div class="drop-zone courtyard-drop-zone" data-area="courtyard">
+                    <div class="drop-circle" data-area="courtyard" data-position="courtyard-0"></div>
+                    <div class="drop-circle" data-area="courtyard" data-position="courtyard-1"></div>
+                </div>
+                
+                <div class="kodesh">
+                    <div class="area-title">הקודש</div>
+                    <div class="drop-zone kodesh-drop-zone" data-area="kodesh">
+                        <div class="drop-circle" data-area="kodesh" data-position="kodesh-0"></div>
+                        <div class="drop-circle" data-area="kodesh" data-position="kodesh-1"></div>
+                        <div class="drop-circle" data-area="kodesh" data-position="kodesh-2"></div>
                     </div>
                     
-                    💡 עליך לגלות את מידות קודש הקודשים בעצמך!
+                    <div class="kodesh-kodashim">
+                        <div class="area-title">קודש הקודשים</div>
+                        <div class="drop-zone" data-area="kodesh-kodashim">
+                            <div class="drop-circle" data-area="kodesh-kodashim" data-position="kodesh-kodashim-0"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="hint-section">
-                    <button class="hint-btn" onclick="showCourtyardHint()">רמז למידות קודש הקודשים</button>
-                    <div id="courtyard-hint" class="hint-display hidden"></div>
-                </div>
-                <div class="input-container">
-                    <input type="number" id="code-input" placeholder="הכנס את המספר הסודי...">
-                    <button class="btn" onclick="checkFinalCode()">פתור צופן!</button>
-                </div>
-                <div id="final-feedback" class="feedback hidden"></div>
             </div>
         </div>
         
-        <div id="victory-section" class="hidden">
-            <div class="victory">
-                <h2>🎉 כל הכבוד! פתרת את הצופן! 🎉</h2>
-                <p>הצלחת לגלות את סוד קודש הקודשים!</p>
-                <p>המספר הסודי היה: <span id="final-number"></span></p>
-                <br>
-                <button class="btn" onclick="restartGame()" style="background: white; color: #228b22;">שחק שוב</button>
+        <div class="controls">
+            <button class="hint-icon" onclick="toggleHints()" title="הצג רמזים">💡</button>
+            <button class="btn check-btn" onclick="checkPlacement()">בדוק מיקום</button>
+            <button class="reset-icon" onclick="resetGame()" title="התחל מחדש">🔄</button>
+        </div>
+        
+        <div class="compass">
+            <div class="compass-container">
+                <div class="compass-needle"></div>
+                <div class="compass-directions">
+                    <span class="north">צ</span>
+                    <span class="south">ד</span>
+                    <span class="east">מ</span>
+                    <span class="west">מע</span>
+                </div>
             </div>
         </div>
         
-
+        <div class="results" id="results" style="display: none;">
+            <div class="score" id="score"></div>
+            <div id="feedback"></div>
+        </div>
+        
+        <div class="hints" id="hints">
+            <h3 style="color: #8b4513; margin-bottom: 15px;">💡 רמזים למיקום הכלים:</h3>
+            <div class="hint-item" id="hint-courtyard" style="display: none;">
+                🔥 <strong>חצר המשכן:</strong> כלי הנחושת - מזבח העולה וכיור
+            </div>
+            <div class="hint-item" id="hint-kodesh" style="display: none;">
+                ✨ <strong>הקודש:</strong> מנורה (דרום), שולחן (צפון), מזבח קטורת (מרכז)
+            </div>
+            <div class="hint-item" id="hint-kodesh-kodashim" style="display: none;">
+                👑 <strong>קודש הקודשים:</strong> ארון הברית בלבד
+            </div>
+        </div>
+        
+        <div class="final-cipher" id="final-cipher">
+            <div class="cipher-text">🗝️ הצופן נחשף!</div>
+            <div class="cipher-explanation">
+                המילה הסודית היא: <strong>"קדושה"</strong><br><br>
+                כל כלי במקומו הנכון יוצר את המבנה הקדוש של המשכן,<br>
+                המסמל את דרגות הקדושה העולות מהחצר אל קודש הקודשים.<br><br>
+                🏛️ חצר ← קודש ← קודש הקודשים = קדושה מתגברת 🏛️
+            </div>
+        </div>
     </div>
 
     <script>
-        let correctAnswers = 0;
-        let currentRiddle = 0;
-        let finalAttempts = 0;
-        let hintsShown = 0;
-        let firstLetterUsed = false;
-        let usedRiddles = [];
+        let draggedElement = null;
+        let correctPlacements = 0;
+        let totalVessels = 6;
         
-        const riddles = [
-            {
-                question: '🔹 חידה 1:<br>"זהב טהור מכסה אותי מכל עבר,<br>שני כרובים פרושי כנפיים עליי.<br>רק פעם בשנה נפתח מעליי הפרוכת,<br>וכהן גדול נכנס — ביום הכיפורים."',
-                answers: ['ארון הברית', 'ארון העדות', 'הארון'],
-                hints: [
-                    'אני הכלי הקדוש ביותר במשכן.',
-                    'בתוכי מונחות לוחות הברית.',
-                    'שני כרובים זהב עומדים עליי.'
-                ],
-                firstLetter: 'א',
-                correctFeedback: '👑 מדהים! ארון הברית - הכלי הקדוש ביותר!',
-                incorrectFeedback: '💭 חשוב על הכלי הקדוש ביותר שבו לוחות הברית...'
-            },
-            {
-                question: '🔹 חידה 2:<br>"מקשה אחת מזהב טהור נוצרנו,<br>כנפינו פרושות זה לזה.<br>פנינו מביטים למטה,<br>ומעל כנפינו — השכינה שוכנת."',
-                answers: ['הכרובים', 'כרובים', 'שני הכרובים'],
-                hints: [
-                    'אנחנו עומדים על הכפורת.',
-                    'כנפינו מכסות על הארון.',
-                    'אנחנו שני מלאכים מזהב טהור.'
-                ],
-                firstLetter: 'כ',
-                correctFeedback: '👼 נכון מאוד! הכרובים - שומרי הקדושה העליונה!',
-                incorrectFeedback: '🤔 חשוב על המלאכים הזהב שעל הארון...'
-            },
-            {
-                question: '🔹 חידה 3:<br>"אני מכסה הארון — זהב טהור,<br>עליי עומדים שני כרובים.<br>פעם בשנה נזרק עליי דם,<br>וממני נשמע קול ה\' — אל משה."',
-                answers: ['הכפורת', 'כפורת'],
-                hints: [
-                    'אני מכסה הזהב של הארון.',
-                    'ביום הכיפורים מזים עליי דם.',
-                    'ממני דיבר ה\' אל משה.'
-                ],
-                firstLetter: 'כ',
-                correctFeedback: '✨ מושלם! הכפורת - מקום השכינה הקדושה!',
-                incorrectFeedback: '🕊️ חשוב על מכסה הזהב שממנו דיבר ה\'...'
+        const correctPositions = {
+            'altar': 'courtyard-0',
+            'laver': 'courtyard-1',
+            'table': 'kodesh-0',
+            'menorah': 'kodesh-1',
+            'incense': 'kodesh-2',
+            'ark': 'kodesh-kodashim-0'
+        };
+        
+        const vesselNames = {
+            'altar': 'מזבח העולה',
+            'laver': 'כיור',
+            'menorah': 'מנורה',
+            'table': 'שולחן לחם הפנים',
+            'incense': 'מזבח הקטורת',
+            'ark': 'ארון הברית'
+        };
+        
+        // Drag and Drop functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const vessels = document.querySelectorAll('.vessel');
+            const dropCircles = document.querySelectorAll('.drop-circle');
+            
+            vessels.forEach(vessel => {
+                vessel.addEventListener('dragstart', handleDragStart);
+                vessel.addEventListener('dragend', handleDragEnd);
+            });
+            
+            dropCircles.forEach(circle => {
+                circle.addEventListener('dragover', handleDragOver);
+                circle.addEventListener('dragenter', handleDragEnter);
+                circle.addEventListener('dragleave', handleDragLeave);
+                circle.addEventListener('drop', handleDrop);
+            });
+            
+            // Don't show hints initially
+        });
+        
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.outerHTML);
+        }
+        
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedElement = null;
+        }
+        
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
             }
-        ];
-        
-        // The secret code: 10 (length) × 10 (width) = 100
-        const SECRET_CODE = 100;
-        
-        function updateProgress() {
-            document.getElementById('progress').textContent = 
-                `חידות נכונות: ${correctAnswers}/3 | ${correctAnswers >= 3 ? 'הצופן נפתח!' : 'צריך 3 כדי לפתוח את הצופן הסודי'}`;
+            e.dataTransfer.dropEffect = 'move';
+            return false;
         }
         
-        function showFeedback(message, type) {
-            const feedback = document.getElementById('feedback');
-            feedback.textContent = message;
-            feedback.className = `feedback ${type}`;
-            feedback.classList.remove('hidden');
+        function handleDragEnter(e) {
+            this.classList.add('drag-over');
         }
         
-        function showHint() {
-            const riddle = riddles[currentRiddle];
-            if (hintsShown < riddle.hints.length) {
-                const hintDisplay = document.getElementById('hint-display');
-                hintDisplay.textContent = riddle.hints[hintsShown];
-                hintDisplay.classList.remove('hidden');
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            this.classList.remove('drag-over');
+            
+            if (draggedElement && this.children.length === 0) {
+                // Remove from original container
+                const originalContainer = draggedElement.parentNode;
                 
-                hintsShown++;
-                updateHintButton();
-            }
-        }
-        
-        function updateHintButton() {
-            const hintBtn = document.getElementById('hint-btn');
-            const riddle = riddles[currentRiddle];
-            
-            if (hintsShown < riddle.hints.length) {
-                hintBtn.textContent = `רמז ${hintsShown + 1}/3`;
-                hintBtn.style.display = 'inline-block';
-            } else if (!firstLetterUsed) {
-                hintBtn.textContent = 'אות ראשונה';
-                hintBtn.className = 'hint-btn first-letter-btn';
-                hintBtn.onclick = showFirstLetter;
-            } else {
-                hintBtn.style.display = 'none';
-            }
-        }
-        
-        function showFirstLetter() {
-            const riddle = riddles[currentRiddle];
-            const answerInput = document.getElementById('answer-input');
-            answerInput.value = riddle.firstLetter;
-            answerInput.focus();
-            
-            firstLetterUsed = true;
-            document.getElementById('hint-btn').style.display = 'none';
-            
-            const hintDisplay = document.getElementById('hint-display');
-            hintDisplay.textContent = `האות הראשונה היא: ${riddle.firstLetter}`;
-        }
-        
-        function getRandomRiddle() {
-            // Get available riddles (not yet used in this game)
-            const availableRiddles = riddles.filter((_, index) => !usedRiddles.includes(index));
-            
-            // If no available riddles, reset the used list (allow repeats)
-            if (availableRiddles.length === 0) {
-                usedRiddles = [];
-                return Math.floor(Math.random() * riddles.length);
-            }
-            
-            // Pick random from available riddles
-            const randomIndex = Math.floor(Math.random() * availableRiddles.length);
-            const selectedRiddleIndex = riddles.findIndex(riddle => riddle === availableRiddles[randomIndex]);
-            
-            usedRiddles.push(selectedRiddleIndex);
-            return selectedRiddleIndex;
-        }
-        
-        function nextRiddle() {
-            if (correctAnswers >= 3) {
-                showFinalChallenge();
-            } else {
-                currentRiddle = getRandomRiddle();
-                loadCurrentRiddle();
-            }
-        }
-        
-        function loadCurrentRiddle() {
-            const riddle = riddles[currentRiddle];
-            // Replace the riddle number with the current sequence number
-            const riddleText = riddle.question.replace(/🔹 חידה \d+:/, `🔹 חידה ${correctAnswers + 1}:`);
-            document.getElementById('riddle-text').innerHTML = riddleText;
-            document.getElementById('answer-input').value = '';
-            document.getElementById('feedback').classList.add('hidden');
-            document.getElementById('hint-display').classList.add('hidden');
-            
-            // Reset hint system
-            hintsShown = 0;
-            firstLetterUsed = false;
-            updateHintButton();
-        }
-        
-        function checkAnswer() {
-            const userAnswer = document.getElementById('answer-input').value.trim();
-            if (!userAnswer) {
-                showFeedback('אנא הכנס תשובה!', 'incorrect');
-                return;
-            }
-            
-            const riddle = riddles[currentRiddle];
-            const isCorrect = riddle.answers.some(answer => 
-                userAnswer.toLowerCase().includes(answer.toLowerCase())
-            );
-            
-            if (isCorrect) {
-                correctAnswers++;
-                updateProgress();
-                showFeedback(riddle.correctFeedback, 'correct');
+                // Add to new container
+                this.appendChild(draggedElement);
                 
-                setTimeout(() => {
-                    if (correctAnswers >= 3) {
-                        showFinalChallenge();
+                // Reset any previous styling
+                resetDropZoneStyles();
+            }
+            
+            return false;
+        }
+        
+        function resetDropZoneStyles() {
+            const dropCircles = document.querySelectorAll('.drop-circle');
+            dropCircles.forEach(circle => {
+                circle.classList.remove('correct', 'incorrect', 'drag-over');
+            });
+        }
+        
+        function checkPlacement() {
+            correctPlacements = 0;
+            const dropCircles = document.querySelectorAll('.drop-circle');
+            const incorrectItems = [];
+            
+            resetDropZoneStyles();
+            
+            dropCircles.forEach(circle => {
+                const vessel = circle.querySelector('.vessel');
+                const position = circle.dataset.position;
+                
+                if (vessel) {
+                    const vesselType = vessel.dataset.vessel;
+                    const correctPosition = correctPositions[vesselType];
+                    
+                    if (correctPosition === position) {
+                        correctPlacements++;
+                        circle.classList.add('correct');
                     } else {
-                        nextRiddle();
+                        circle.classList.add('incorrect');
+                        const areaType = circle.dataset.area;
+                        incorrectItems.push({
+                            vessel: vesselNames[vesselType],
+                            current: getAreaName(areaType),
+                            correct: getAreaName(correctPosition.split('-')[0])
+                        });
                     }
+                }
+            });
+            
+            showResults(incorrectItems);
+        }
+        
+        function getAreaName(area) {
+            const names = {
+                'courtyard': 'חצר המשכן',
+                'kodesh': 'הקודש',
+                'kodesh-kodashim': 'קודש הקודשים'
+            };
+            return names[area] || area;
+        }
+        
+        function showResults(incorrectItems) {
+            const resultsDiv = document.getElementById('results');
+            const scoreDiv = document.getElementById('score');
+            const feedbackDiv = document.getElementById('feedback');
+            
+            scoreDiv.textContent = `ציון: ${correctPlacements}/${totalVessels} נכון`;
+            
+            if (correctPlacements === totalVessels) {
+                feedbackDiv.innerHTML = '🎉 <strong>מושלם!</strong> כל הכלים במקום הנכון!';
+                feedbackDiv.style.color = '#155724';
+                showFinalCipher();
+            } else {
+                let feedback = '❌ <strong>כלים שלא במקום הנכון:</strong><br>';
+                incorrectItems.forEach(item => {
+                    feedback += `• ${item.vessel}: נמצא ב${item.current}, צריך להיות ב${item.correct}<br>`;
+                });
+                feedbackDiv.innerHTML = feedback;
+                feedbackDiv.style.color = '#721c24';
+            }
+            
+            resultsDiv.style.display = 'block';
+        }
+        
+        function toggleHints() {
+            const hintsDiv = document.getElementById('hints');
+            const isVisible = hintsDiv.classList.contains('show');
+            
+            if (isVisible) {
+                hintsDiv.classList.remove('show');
+            } else {
+                hintsDiv.classList.add('show');
+                showProgressiveHints();
+            }
+        }
+        
+        function showProgressiveHints() {
+            const hintIds = ['hint-courtyard', 'hint-kodesh', 'hint-kodesh-kodashim'];
+            const wrongPlacements = totalVessels - correctPlacements;
+            
+            // Show all hints initially
+            document.getElementById('hint-courtyard').style.display = 'block';
+            document.getElementById('hint-kodesh').style.display = 'block';
+            document.getElementById('hint-kodesh-kodashim').style.display = 'block';
+        }
+        
+        function showFinalCipher() {
+            const cipherDiv = document.getElementById('final-cipher');
+            setTimeout(() => {
+                cipherDiv.classList.add('show');
+                // Add next page button after cipher is revealed
+                setTimeout(() => {
+                    addNextPageButton();
                 }, 2000);
-            } else {
-                showFeedback(riddle.incorrectFeedback, 'incorrect');
-            }
+            }, 1000);
         }
         
-        function showFinalChallenge() {
-            document.getElementById('riddle-section').classList.add('hidden');
-            document.getElementById('final-challenge').classList.remove('hidden');
+        function addNextPageButton() {
+            const cipherDiv = document.getElementById('final-cipher');
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'btn check-btn';
+            nextBtn.style.marginTop = '20px';
+            nextBtn.textContent = 'עבור לעמוד הבא';
+            nextBtn.onclick = goToNextPage;
+            cipherDiv.appendChild(nextBtn);
         }
         
-        function checkFinalCode() {
-            const userCode = parseInt(document.getElementById('code-input').value);
-            const finalFeedback = document.getElementById('final-feedback');
+        function goToNextPage() {
+            alert('מעבר לעמוד הבא - כאן יהיה השלב הבא של המשחק!');
+        }
+        
+        function resetGame() {
+            // Move all vessels back to the container
+            const vesselsContainer = document.querySelector('.vessels-container');
+            const vessels = document.querySelectorAll('.vessel');
             
-            if (isNaN(userCode)) {
-                finalFeedback.textContent = 'אנא הכנס מספר תקין!';
-                finalFeedback.className = 'feedback incorrect';
-                finalFeedback.classList.remove('hidden');
-                return;
+            vessels.forEach(vessel => {
+                vesselsContainer.appendChild(vessel);
+            });
+            
+            // Reset all states
+            resetDropZoneStyles();
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('hints').classList.remove('show');
+            document.getElementById('final-cipher').classList.remove('show');
+            
+            // Hide all hint items
+            document.querySelectorAll('.hint-item').forEach(hint => {
+                hint.style.display = 'none';
+            });
+            
+            correctPlacements = 0;
+        }
+        
+        // Touch support for mobile devices
+        let touchItem = null;
+        
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.classList.contains('vessel')) {
+                touchItem = e.target;
+                touchItem.classList.add('dragging');
             }
-            
-            if (userCode === SECRET_CODE) {
-                showVictory();
-            } else {
-                finalAttempts++;
+        });
+        
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            if (touchItem) {
+                const touch = e.changedTouches[0];
+                const dropCircle = document.elementFromPoint(touch.clientX, touch.clientY);
                 
-                if (finalAttempts === 1) {
-                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: קודש הקודשים היה ריבוע מושלם.<br>חשב את השטח!`;
-                    finalFeedback.className = 'feedback hint';
-                } else {
-                    finalFeedback.innerHTML = `💡 רמז נוסף:<br>אורך קודש הקודשים: 10 אמות<br>רוחב קודש הקודשים: 10 אמות<br>הכפל: 10 × 10 = ?`;
-                    finalFeedback.className = 'feedback hint';
+                if (dropCircle && dropCircle.classList.contains('drop-circle') && dropCircle.children.length === 0) {
+                    dropCircle.appendChild(touchItem);
+                    resetDropZoneStyles();
                 }
                 
-                finalFeedback.classList.remove('hidden');
-            }
-        }
-        
-        function showVictory() {
-            document.getElementById('final-challenge').classList.add('hidden');
-            document.getElementById('victory-section').classList.remove('hidden');
-            document.getElementById('final-number').textContent = SECRET_CODE;
-        }
-        
-        function restartGame() {
-            correctAnswers = 0;
-            finalAttempts = 0;
-            hintsShown = 0;
-            firstLetterUsed = false;
-            usedRiddles = [];
-            
-            // Start with random riddle
-            currentRiddle = getRandomRiddle();
-            
-            updateProgress();
-            
-            document.getElementById('riddle-section').classList.remove('hidden');
-            document.getElementById('final-challenge').classList.add('hidden');
-            document.getElementById('victory-section').classList.add('hidden');
-            
-            loadCurrentRiddle();
-            document.getElementById('code-input').value = '';
-            document.getElementById('final-feedback').classList.add('hidden');
-        }
-        
-        // Allow Enter key to submit answers
-        document.getElementById('answer-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
+                touchItem.classList.remove('dragging');
+                touchItem = null;
             }
         });
-        
-        document.getElementById('code-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkFinalCode();
-            }
-        });
-        
-        function showCourtyardHint() {
-            const hintDisplay = document.getElementById('courtyard-hint');
-            hintDisplay.innerHTML = '📖 עיין בשמות כו, טז לגילוי מידות קודש הקודשים';
-            hintDisplay.classList.remove('hidden');
-        }
-        
-
-        
-        // Initialize the game
-        currentRiddle = getRandomRiddle();
-        updateProgress();
-        loadCurrentRiddle();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fad740e2822674',t:'MTc1Nzk2Nzc5NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fb357474efe8b9',t:'MTc1Nzk3MTY1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
