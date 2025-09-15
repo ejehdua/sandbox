@@ -15,22 +15,18 @@
         
         body {
             font-family: 'Heebo', sans-serif;
-            background: white;
+            background: transparent;
             min-height: 100vh;
             padding: 20px;
             overflow-x: auto;
         }
         
         .game-container {
-            background: linear-gradient(145deg, rgba(255, 248, 220, 0.98), rgba(255, 245, 238, 0.95));
+            background: transparent;
             border-radius: 15px;
             padding: 15px;
             max-width: 600px;
             margin: 0 auto;
-            box-shadow: 
-                0 10px 30px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            border: 3px solid #daa520;
         }
         
         .title {
@@ -470,6 +466,13 @@
             box-shadow: 
                 0 10px 30px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: transform 0.1s ease-out;
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+        
+        .congratulations-window:hover {
+            transform: scale(1.02);
         }
         
         .congratulations-title {
@@ -523,7 +526,35 @@
     </div>
 
     <script>
-        // Simple congratulations page - no interactive functionality needed
+        // Tilt effect for congratulations window
+        const congratsWindow = document.querySelector('.congratulations-window');
+        
+        congratsWindow.addEventListener('mousemove', (e) => {
+            const rect = congratsWindow.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const mouseX = e.clientX - centerX;
+            const mouseY = e.clientY - centerY;
+            
+            const rotateX = (mouseY / rect.height) * -20; // Max 20 degrees
+            const rotateY = (mouseX / rect.width) * 20;   // Max 20 degrees
+            
+            congratsWindow.style.transform = `
+                perspective(1000px) 
+                rotateX(${rotateX}deg) 
+                rotateY(${rotateY}deg) 
+                scale(1.02)
+            `;
+        });
+        
+        congratsWindow.addEventListener('mouseleave', () => {
+            congratsWindow.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+        });
+        
+        congratsWindow.addEventListener('mouseenter', () => {
+            congratsWindow.style.transition = 'transform 0.1s ease-out';
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fb397bb52b0dd4',t:'MTc1Nzk3MTgxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fb4b1ee0f92212',t:'MTc1Nzk3MjU0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
