@@ -188,4 +188,389 @@
         .final-challenge .riddle-text { color: #ffd700; font-size: 1.05rem; line-height: 1.25; margin-bottom: 6px; }
         
         .victory {
-            background
+            background: linear-gradient(135deg, #228b22, #32cd32);
+            color: white; text-align: center; padding: 15px; border-radius: 10px; animation: celebrate 1s ease-in-out;
+        }
+        @keyframes celebrate { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .victory h2 { font-size: 1.4rem; margin-bottom: 8px; }
+        
+        .verse-hint-btn {
+            background: rgba(255, 215, 0, 0.8); border: 1px solid #daa520; border-radius: 50%;
+            width: 24px; height: 24px; font-size: 0.7rem; cursor: pointer; margin-right: 5px;
+            transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .verse-hint-btn:hover { background: #ffd700; transform: scale(1.1); }
+        
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .popup-content {
+            background: linear-gradient(145deg, #fff8dc, #ffeaa7); border: 3px solid #daa520; border-radius: 15px;
+            padding: 20px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .popup-title { color: #8b4513; font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; }
+        .popup-verse { color: #654321; font-size: 0.9rem; line-height: 1.4; margin-bottom: 15px; font-style: italic; }
+        .popup-close { background: linear-gradient(135deg, #daa520, #b8860b); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .popup-close:hover { background: linear-gradient(135deg, #b8860b, #daa520); transform: translateY(-2px); }
+        
+        /* התרשים – הקטנת ממדים ומרווחים */
+        .courtyard-visual { margin: 6px 0; display: flex; justify-content: center; }
+        .courtyard-rectangle {
+            position: relative;
+            width: 180px;
+            height: 72px;
+            border: 3px solid #daa520;
+            background: linear-gradient(135deg, rgba(255, 248, 220, 0.3), rgba(255, 245, 238, 0.5));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .dimension-label {
+            position: absolute; font-size: 0.68rem; font-weight: 600; color: #8b4513;
+            background: rgba(255, 248, 220, 0.9); padding: 2px 6px; border-radius: 4px; border: 1px solid #daa520;
+        }
+        .dimension-label.top { top: -14px; left: 50%; transform: translateX(-50%); }
+        .dimension-label.side { right: -42px; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: center; }
+        .courtyard-content { display: flex; gap: 10px; align-items: center; }
+        .altar, .laver, .tent { font-size: 1.1rem; opacity: 0.75; }
+        
+        .hidden { display: none; }
+        
+        @media (max-width: 768px) {
+            .game-container { padding: 20px; margin: 10px; }
+            .title { font-size: 2rem; }
+            .riddle-text { font-size: 1.1rem; }
+            .input-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="title">🗝️ צופן החצר</h1>
+        
+        <div class="progress">
+            <div class="progress-text" id="progress">חידות נכונות: 0/3 | צריך 3 כדי לפתוח את הצופן הסודי</div>
+        </div>
+        
+        <div id="riddle-section">
+            <div class="riddle-container">
+                <div class="riddle-text" id="riddle-text">
+                    🕯️ חידה ראשונה:<br>
+                    "אני עומד במרכז המשכן, עליי שולחן הלחם ומנורת הזהב. מה שמי?"
+                </div>
+                <div class="input-container">
+                    <input type="text" id="answer-input" placeholder="הכנס את התשובה כאן...">
+                    <button class="btn" onclick="checkAnswer()">בדוק תשובה</button>
+                </div>
+                <div class="hint-section">
+                    <button id="hint-btn" class="hint-btn" onclick="showHint()">רמז 1/3</button>
+                    <div id="hint-display" class="hint-display hidden"></div>
+                </div>
+                <div id="feedback" class="feedback hidden"></div>
+            </div>
+        </div>
+        
+        <div id="final-challenge" class="hidden">
+            <div class="riddle-container final-challenge">
+                <div class="riddle-text">
+                    🗝️ הצופן הסודי - צופן החצר!<br><br>
+                    עכשיו הגיע הזמן לפתור את הצופן הגדול...<br><br>
+                    חשב את שטח החצר:<br>
+                    <strong>אורך × רוחב = ?</strong><br>
+                    
+                    <div class="courtyard-visual">
+                        <div class="courtyard-rectangle">
+                            <div class="dimension-label top">אורך: ? אמות</div>
+                            <div class="dimension-label side">רוחב: ? אמות</div>
+                            <div class="courtyard-content">
+                                <div class="altar">🔥</div>
+                                <div class="laver">💧</div>
+                                <div class="tent">⛺</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    💡 עליך לגלות את המידות בעצמך!
+                </div>
+                <div class="hint-section">
+                    <button class="hint-btn" onclick="showCourtyardHint()">רמז למידות החצר</button>
+                    <div id="courtyard-hint" class="hint-display hidden"></div>
+                </div>
+                <div class="input-container">
+                    <input type="number" id="code-input" placeholder="הכנס את המספר הסודי...">
+                    <button class="btn" onclick="checkFinalCode()">פתור צופן!</button>
+                </div>
+                <div id="final-feedback" class="feedback hidden"></div>
+            </div>
+        </div>
+        
+        <div id="victory-section" class="hidden">
+            <div class="victory">
+                <h2>🎉 כל הכבוד! פתרת את הצופן! 🎉</h2>
+                <p>הצלחת לגלות את סוד החצר!</p>
+                <p>המספר הסודי היה: <span id="final-number"></span></p>
+                <br>
+                <button class="btn" onclick="restartGame()" style="background: white; color: #228b22;">שחק שוב</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswers = 0;
+        let currentRiddle = 0;
+        let finalAttempts = 0;
+        let hintsShown = 0;
+        let firstLetterUsed = false;
+        let usedRiddles = [];
+        
+        const riddles = [
+            {
+                question: '🔹 חידה 1:<br>"בנחושת אני מצופה,<br>ועֹלות עולות עליי — עשנן לשמים.<br>ארבע קרנות בקצותיי,<br>ואש תמיד בוערת בי — אך מנורה אינני."',
+                answers: ['מזבח העולה', 'מזבח', 'המזבח'],
+                hints: [
+                    'אני ניצב בחצר ולא בתוך האוהל.',
+                    'אליי מעלים עֹלוֹת מן הצאן והבקר.',
+                    'ארבע קרנות בקצוותיי, ונחושת עוטפת אותי.'
+                ],
+                firstLetter: 'מ',
+                // הוחלף "החצר הקדושה" ל"החצר"
+                correctFeedback: '🔥 מושלם! מזבח העולה - הלב הבוער של החצר!',
+                incorrectFeedback: '🤔 חשוב על מה שעשוי נחושת ובוער תמיד בחצר...'
+            },
+            {
+                question: '🔹 חידה 2:<br>"עליי לא מקריבים, אך בלעדיי אין העבודה מתחילה.<br>ממה שהביאו הנשים נוצרתי,<br>וממני רוחצים ידיים ורגליים —<br>להיכנס בטהרה."',
+                answers: ['הכיור', 'כיור'],
+                hints: [
+                    'אני נמצא בין האוהל לבין המזבח.',
+                    'משמש לרחיצת כוהנים לפני העבודה.',
+                    'עשוי נחושת ומקורו במה שהביאו הנשים.'
+                ],
+                firstLetter: 'ה',
+                correctFeedback: '💧 נכון! הכיור - מקור הטהרה לכהנים!',
+                incorrectFeedback: '💭 חשוב על מה שעשוי ממראות נשים ומשמש לטהרה...'
+            },
+            {
+                question: '🔹 חידה 3:<br>"אני חומה בלי אבנים — אריג פשתן לבן,<br>מתוח על שישים עמודים.<br>מקיף ומבדיל בשקט,<br>גבול ברור בין חול לקֹדש."',
+                answers: ['קלעי החצר', 'קלעים', 'הקלעים'],
+                hints: [
+                    'אינני קיר קשיח — אני עשוי בד.',
+                    'מקיף את כל המתחם של המשכן.',
+                    'תלוי על 60 עמודים ונקרא קלעים.'
+                ],
+                firstLetter: 'ק',
+                correctFeedback: '🏛️ מצוין! קלעי החצר - הגבול הקדוש של המשכן!',
+                incorrectFeedback: '🔍 חשוב על מה שמקיף את החצר על עמודים...'
+            }
+        ];
+        
+        // The secret code: 100 (length) × 50 (width) = 5000
+        const SECRET_CODE = 5000;
+
+        // מונחים שלא יתקבלו בטעות עבור חידת מזבח העולה
+        const FORBIDDEN_ALTAR_TERMS = ['מזבח הזהב', 'מזבח הקטורת'];
+        
+        function updateProgress() {
+            document.getElementById('progress').textContent = 
+                `חידות נכונות: ${correctAnswers}/3 | ${correctAnswers >= 3 ? 'הצופן נפתח!' : 'צריך 3 כדי לפתוח את הצופן הסודי'}`;
+        }
+        
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback ${type}`;
+            feedback.classList.remove('hidden');
+        }
+        
+        function showHint() {
+            const riddle = riddles[currentRiddle];
+            if (hintsShown < riddle.hints.length) {
+                const hintDisplay = document.getElementById('hint-display');
+                hintDisplay.textContent = riddle.hints[hintsShown];
+                hintDisplay.classList.remove('hidden');
+                
+                hintsShown++;
+                updateHintButton();
+            }
+        }
+        
+        function updateHintButton() {
+            const hintBtn = document.getElementById('hint-btn');
+            const riddle = riddles[currentRiddle];
+            
+            if (hintsShown < riddle.hints.length) {
+                hintBtn.textContent = `רמז ${hintsShown + 1}/3`;
+                hintBtn.style.display = 'inline-block';
+            } else if (!firstLetterUsed) {
+                hintBtn.textContent = 'אות ראשונה';
+                hintBtn.className = 'hint-btn first-letter-btn';
+                hintBtn.onclick = showFirstLetter;
+            } else {
+                hintBtn.style.display = 'none';
+            }
+        }
+        
+        function showFirstLetter() {
+            const riddle = riddles[currentRiddle];
+            const answerInput = document.getElementById('answer-input');
+            answerInput.value = riddle.firstLetter;
+            answerInput.focus();
+            
+            firstLetterUsed = true;
+            document.getElementById('hint-btn').style.display = 'none';
+            
+            const hintDisplay = document.getElementById('hint-display');
+            hintDisplay.textContent = `האות הראשונה היא: ${riddle.firstLetter}`;
+        }
+
+        function normalize(str) {
+            return (str || '')
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        
+        function getRandomRiddle() {
+            const availableRiddles = riddles.filter((_, index) => !usedRiddles.includes(index));
+            if (availableRiddles.length === 0) {
+                usedRiddles = [];
+                return Math.floor(Math.random() * riddles.length);
+            }
+            const randomIndex = Math.floor(Math.random() * availableRiddles.length);
+            const selectedRiddleIndex = riddles.findIndex(riddle => riddle === availableRiddles[randomIndex]);
+            usedRiddles.push(selectedRiddleIndex);
+            return selectedRiddleIndex;
+        }
+        
+        function nextRiddle() {
+            if (correctAnswers >= 3) {
+                showFinalChallenge();
+            } else {
+                currentRiddle = getRandomRiddle();
+                loadCurrentRiddle();
+            }
+        }
+        
+        function loadCurrentRiddle() {
+            const riddle = riddles[currentRiddle];
+            const riddleText = riddle.question.replace(/🔹 חידה \d+:/, `🔹 חידה ${correctAnswers + 1}:`);
+            document.getElementById('riddle-text').innerHTML = riddleText;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('hint-display').classList.add('hidden');
+            hintsShown = 0;
+            firstLetterUsed = false;
+            updateHintButton();
+        }
+        
+        function checkAnswer() {
+            const rawUser = document.getElementById('answer-input').value.trim();
+            if (!rawUser) {
+                showFeedback('אנא הכנס תשובה!', 'incorrect');
+                return;
+            }
+            const userAnswer = normalize(rawUser);
+            const riddle = riddles[currentRiddle];
+
+            // חסימה מפורשת למונחים שלא מתאימים למזבח העולה
+            const isAltarRiddle = riddle.answers.some(a => normalize(a) === 'מזבח העולה');
+            if (isAltarRiddle) {
+                const forbiddenHit = FORBIDDEN_ALTAR_TERMS.some(term => userAnswer.includes(normalize(term)));
+                if (forbiddenHit) {
+                    showFeedback('❌ זו אינה התשובה הנכונה — זה לא מזבח העולה.', 'incorrect');
+                    return;
+                }
+            }
+
+            // בדיקת התאמה מדויקת (לא "includes") כדי למנוע קבלות שווא
+            const isCorrect = riddle.answers.some(answer => normalize(answer) === userAnswer);
+            
+            if (isCorrect) {
+                correctAnswers++;
+                updateProgress();
+                showFeedback(riddle.correctFeedback, 'correct');
+                
+                setTimeout(() => {
+                    if (correctAnswers >= 3) {
+                        showFinalChallenge();
+                    } else {
+                        nextRiddle();
+                    }
+                }, 2000);
+            } else {
+                showFeedback(riddle.incorrectFeedback, 'incorrect');
+            }
+        }
+        
+        function showFinalChallenge() {
+            document.getElementById('riddle-section').classList.add('hidden');
+            document.getElementById('final-challenge').classList.remove('hidden');
+        }
+        
+        function checkFinalCode() {
+            const userCode = parseInt(document.getElementById('code-input').value);
+            const finalFeedback = document.getElementById('final-feedback');
+            
+            if (isNaN(userCode)) {
+                finalFeedback.textContent = 'אנא הכנס מספר תקין!';
+                finalFeedback.className = 'feedback incorrect';
+                finalFeedback.classList.remove('hidden');
+                return;
+            }
+            
+            if (userCode === SECRET_CODE) {
+                showVictory();
+            } else {
+                finalAttempts++;
+                
+                if (finalAttempts === 1) {
+                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: חצר המשכן הייתה מלבן גדול.<br>חשב את השטח!`;
+                    finalFeedback.className = 'feedback hint';
+                } else {
+                    finalFeedback.innerHTML = `💡 רמז נוסף:<br>אורך החצר: 100 אמות<br>רוחב החצר: 50 אמות<br>הכפל: 100 × 50 = ?`;
+                    finalFeedback.className = 'feedback hint';
+                }
+                
+                finalFeedback.classList.remove('hidden');
+            }
+        }
+        
+        function showVictory() {
+            document.getElementById('final-challenge').classList.add('hidden');
+            document.getElementById('victory-section').classList.remove('hidden');
+            document.getElementById('final-number').textContent = SECRET_CODE;
+        }
+        
+        function restartGame() {
+            correctAnswers = 0;
+            finalAttempts = 0;
+            hintsShown = 0;
+            firstLetterUsed = false;
+            usedRiddles = [];
+            currentRiddle = getRandomRiddle();
+            updateProgress();
+            document.getElementById('riddle-section').classList.remove('hidden');
+            document.getElementById('final-challenge').classList.add('hidden');
+            document.getElementById('victory-section').classList.add('hidden');
+            loadCurrentRiddle();
+            document.getElementById('code-input').value = '';
+            document.getElementById('final-feedback').classList.add('hidden');
+        }
+        
+        document.getElementById('answer-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { checkAnswer(); }
+        });
+        document.getElementById('code-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { checkFinalCode(); }
+        });
+        
+        function showCourtyardHint() {
+            const hintDisplay = document.getElementById('courtyard-hint');
+            hintDisplay.innerHTML = '📖 עיין בשמות כז, יח לגילוי מידות החצר';
+            hintDisplay.classList.remove('hidden');
+        }
+        
+        // Initialize the game
+        currentRiddle = getRandomRiddle();
+        updateProgress();
+        loadCurrentRiddle();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fad099d4aa0dd4',t:'MTc1Nzk2NzUyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
