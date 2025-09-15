@@ -6,29 +6,26 @@
   <title>צופן קודש הקודשים</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       font-family: 'Heebo', sans-serif;
-      background: white;
-      min-height: 100vh;
+      background: #ffffff;         /* בלי רקע מיוחד */
+      min-height: 60vh;            /* נמוך יותר */
       padding: 20px;
       overflow-x: auto;
     }
-    
+
     .game-container {
       border-radius: 15px;
       padding: 15px;
-      max-width: 900px;
+      max-width: 960px;            /* רחב יותר */
       margin: 0 auto;
-      border: 3px solid #daa520;
+      border: 3px solid #daa520;   /* מסגרת עדינה */
+      background: transparent;     /* בלי רקע */
     }
-    
+
     .title {
       text-align: center;
       color: #8b4513;
@@ -36,7 +33,7 @@
       font-weight: 700;
       margin-bottom: 10px;
     }
-    
+
     .subtitle {
       text-align: center;
       color: #a0522d;
@@ -44,25 +41,32 @@
       margin-bottom: 20px;
       font-weight: 500;
     }
-    
+
+    .tabernacle-layout {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+    }
+
     .courtyard {
       border: 3px solid #8b4513;
       border-radius: 10px;
       padding: 8px;
       position: relative;
-      min-height: 120px;
+      min-height: 120px;           /* מעט נמוך יותר */
       width: 100%;
-      max-width: 700px;
+      max-width: 700px;            /* מעט רחב יותר */
       display: flex;
       flex-direction: column;
+      background: transparent;     /* בלי רקע */
     }
-    
+
     .area-title {
       position: absolute;
       top: -10px;
       left: 50%;
       transform: translateX(-50%);
-      background: #fff;
+      background: #fff;            /* תגית נקייה */
       padding: 2px 8px;
       border: 2px solid #8b4513;
       border-radius: 12px;
@@ -70,7 +74,7 @@
       color: #8b4513;
       font-size: 0.7rem;
     }
-    
+
     .courtyard-drop-zone {
       min-height: 40px;
       width: 100%;
@@ -80,19 +84,20 @@
       justify-content: center;
       align-items: center;
     }
-    
+
     .kodesh {
       border: 2px solid #daa520;
       border-radius: 6px;
       padding: 6px;
       position: relative;
-      min-height: 70px;
-      width: 90%;
+      min-height: 70px;            /* נמוך יותר */
+      width: 90%;                  /* מעט רחב יותר */
       margin: auto auto 0 auto;
       display: flex;
       flex-direction: column;
+      background: transparent;     /* בלי רקע */
     }
-    
+
     .kodesh-drop-zone {
       min-height: 30px;
       width: 100%;
@@ -103,35 +108,27 @@
       justify-items: center;
       align-items: center;
     }
-    
-    .kodesh-drop-zone .drop-circle:nth-child(1) {
-      grid-column: 1;
-      grid-row: 1; /* צפון */
-    }
-    
-    .kodesh-drop-zone .drop-circle:nth-child(2) {
-      grid-column: 2;
-      grid-row: 1; /* דרום */
-    }
-    
-    .kodesh-drop-zone .drop-circle:nth-child(3) {
-      grid-column: 1 / 3;
-      grid-row: 2; /* מרכז */
-    }
-    
+
+    /* סדר העיגולים בקודש:
+       1 = צפון (שמאל למעלה), 2 = דרום (ימין למעלה), 3 = מרכז (שורה שנייה, באמצע) */
+    .kodesh-drop-zone .drop-circle:nth-child(1) { grid-column: 1; grid-row: 1; }
+    .kodesh-drop-zone .drop-circle:nth-child(2) { grid-column: 2; grid-row: 1; }
+    .kodesh-drop-zone .drop-circle:nth-child(3) { grid-column: 1 / 3; grid-row: 2; }
+
     .kodesh-kodashim {
       border: 2px solid #b8860b;
       border-radius: 4px;
       padding: 4px;
       position: relative;
-      min-height: 30px;
-      width: 75%;
+      min-height: 30px;            /* נמוך יותר */
+      width: 75%;                  /* מעט רחב יותר */
       margin: auto auto 0 auto;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: transparent;     /* בלי רקע */
     }
-    
+
     .vessels-container {
       display: flex;
       flex-wrap: wrap;
@@ -141,8 +138,9 @@
       padding: 15px;
       border-radius: 10px;
       border: 2px dashed #daa520;
+      background: transparent;     /* בלי רקע */
     }
-    
+
     .vessel {
       width: 40px;
       height: 40px;
@@ -157,47 +155,48 @@
       position: relative;
       user-select: none;
     }
-    
-    .vessel.dragging {
-      cursor: grabbing;
-      transform: rotate(5deg) scale(1.1);
-      z-index: 1000;
+
+    .vessel:hover { transform: scale(1.1); }
+    .vessel.dragging { cursor: grabbing; transform: rotate(5deg) scale(1.1); z-index: 1000; }
+
+    .vessel.bronze { background: #d08a52; border-color: #8b4513; color: #2f1b14; }
+    .vessel.gold   { background: #ffe380; border-color: #daa520; color: #8b4513; }
+
+    .vessel-tooltip {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1001;
     }
-    
-    .vessel.bronze {
-      background: linear-gradient(135deg, #cd7f32, #b87333);
-      border-color: #8b4513;
-      color: #2f1b14;
-    }
-    
-    .vessel.gold {
-      background: linear-gradient(135deg, #ffd700, #ffef94);
-      border-color: #daa520;
-      color: #8b4513;
-    }
-    
+    .vessel:hover .vessel-tooltip { opacity: 1; }
+
     .drop-circle {
       width: 50px;
       height: 50px;
-      border: 3px dashed #ccc;
+      border: 3px dashed #bfbfbf;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
       position: relative;
+      background: transparent;
     }
-    
-    .drop-circle.correct {
-      background: rgba(50, 205, 50, 0.2);
-      border-color: #32cd32;
-    }
-    
-    .drop-circle.incorrect {
-      background: rgba(255, 0, 0, 0.1);
-      border-color: #ff0000;
-    }
-    
+
+    .drop-circle.drag-over { border-color: #32cd32; }
+    .drop-circle.correct   { background: rgba(50,205,50,0.2); border-color: #32cd32; }
+    .drop-circle.incorrect { background: rgba(255,0,0,0.1);  border-color: #ff0000; }
+
     .controls {
       display: flex;
       gap: 10px;
@@ -205,7 +204,7 @@
       align-items: center;
       margin-bottom: 15px;
     }
-    
+
     .btn {
       background: linear-gradient(135deg, #daa520, #b8860b);
       color: white;
@@ -218,40 +217,44 @@
       transition: all 0.3s ease;
       font-family: 'Heebo', sans-serif;
     }
-    
+    .btn:hover { transform: translateY(-2px); }
+
     .btn.check-btn {
       background: linear-gradient(135deg, #28a745, #20c997);
       font-size: 1.2rem;
       padding: 15px 30px;
     }
-    
+
+    .hint-icon, .reset-icon {
+      width: 50px; height: 50px; border-radius: 50%; color: white; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;
+    }
+    .hint-icon  { background: #6b5b47; }
+    .reset-icon { background: #c82333; }
+    .hint-icon:hover, .reset-icon:hover { transform: scale(1.06); }
+
     .results {
       border-radius: 10px;
       padding: 15px;
       margin-bottom: 20px;
       text-align: center;
       border: 2px solid #daa520;
+      background: transparent;
     }
-    
-    .score {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #8b4513;
-      margin-bottom: 10px;
-    }
-    
+
+    .score { font-size: 1.2rem; font-weight: 600; color: #8b4513; margin-bottom: 10px; }
+
     .hints {
       border: 2px solid #ffeaa7;
       border-radius: 8px;
       padding: 15px;
       margin-top: 15px;
       display: none;
+      background: #fffef7;
     }
-    
-    .hints.show {
-      display: block;
-    }
-    
+    .hints.show { display: block; }
+    .hint-item { color: #856404; margin-bottom: 8px; font-size: 0.9rem; }
+
     .final-cipher {
       border: 3px solid #daa520;
       border-radius: 15px;
@@ -259,27 +262,375 @@
       text-align: center;
       margin-top: 20px;
       display: none;
+      background: transparent;
     }
-    
-    .final-cipher.show {
-      display: block;
+    .final-cipher.show { display: block; }
+    .cipher-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
+
+    /* מצפן קטן (לא חובה, רק עזר ויזואלי) */
+    .compass { display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; }
+    .compass-container {
+      position: relative; width: 80px; height: 80px; border: 3px solid #8b4513; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; background: transparent;
     }
-    
-    .cipher-text {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 15px;
+    .compass-needle { width: 2px; height: 30px; background: #dc3545; position: absolute; transform-origin: top center; }
+    .compass-needle::before {
+      content: ''; position: absolute; bottom: -5px; left: -3px; width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 8px solid #dc3545;
     }
-    
+    .compass-directions { position: absolute; width: 100%; height: 100%; }
+    .compass-directions span { position: absolute; font-size: 0.8rem; font-weight: bold; color: #8b4513; }
+    .compass-directions .north { right: -8px; top: 50%; transform: translateY(-50%); }
+    .compass-directions .south { left: -8px; top: 50%; transform: translateY(-50%); }
+    .compass-directions .east  { bottom: -5px; left: 50%; transform: translateX(-50%); }
+    .compass-directions .west  { top: -5px; left: 50%; transform: translateX(-50%); }
+
     @media (max-width: 768px) {
-      .game-container {
-        padding: 10px;
-        margin: 10px;
-      }
+      .game-container { padding: 10px; margin: 10px; max-width: 100%; }
+      .courtyard { max-width: 100%; min-height: 110px; }
     }
   </style>
 </head>
 <body>
-  <!-- כאן מגיע כל קוד ה-HTML וה-JS שכבר נתתי לך בהודעה הקודמת -->
+  <div class="game-container">
+    <h1 class="title">🗝️ צופן קודש הקודשים</h1>
+    <p class="subtitle">גרור את כלי המשכן למקומם הנכון</p>
+
+    <div class="vessels-container">
+      <div class="vessel bronze" draggable="true" data-vessel="altar">
+        🔥
+        <div class="vessel-tooltip">מזבח העולה</div>
+      </div>
+      <div class="vessel bronze" draggable="true" data-vessel="laver">
+        💧
+        <div class="vessel-tooltip">כיור</div>
+      </div>
+      <div class="vessel gold" draggable="true" data-vessel="menorah">
+        🕯️
+        <div class="vessel-tooltip">מנורה</div>
+      </div>
+      <div class="vessel gold" draggable="true" data-vessel="table">
+        🍞
+        <div class="vessel-tooltip">שולחן לחם הפנים</div>
+      </div>
+      <div class="vessel gold" draggable="true" data-vessel="incense">
+        💨
+        <div class="vessel-tooltip">מזבח הקטורת</div>
+      </div>
+      <div class="vessel gold" draggable="true" data-vessel="ark">
+        ⬜
+        <div class="vessel-tooltip">ארון הברית</div>
+      </div>
+    </div>
+
+    <div class="tabernacle-layout">
+      <div class="courtyard">
+        <div class="area-title">חצר</div>
+        <div class="drop-zone courtyard-drop-zone" data-area="courtyard">
+          <div class="drop-circle" data-area="courtyard" data-position="courtyard-0"></div>
+          <div class="drop-circle" data-area="courtyard" data-position="courtyard-1"></div>
+        </div>
+
+        <div class="kodesh">
+          <div class="area-title">קודש</div>
+          <div class="drop-zone kodesh-drop-zone" data-area="kodesh">
+            <div class="drop-circle" data-area="kodesh" data-position="kodesh-0" title="צפון"></div>
+            <div class="drop-circle" data-area="kodesh" data-position="kodesh-1" title="דרום"></div>
+            <div class="drop-circle" data-area="kodesh" data-position="kodesh-2" title="מרכז"></div>
+          </div>
+
+          <div class="kodesh-kodashim">
+            <div class="area-title">קודש הקודשים</div>
+            <div class="drop-zone" data-area="kodesh-kodashim">
+              <div class="drop-circle" data-area="kodesh-kodashim" data-position="kodesh-kodashim-0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="hint-icon" onclick="toggleHints()" title="הצג רמזים">💡</button>
+      <button class="btn check-btn" onclick="checkPlacement()">בדוק מיקום</button>
+      <button class="reset-icon" onclick="resetGame()" title="התחל מחדש">🔄</button>
+    </div>
+
+    <div class="compass">
+      <div class="compass-container">
+        <div class="compass-needle"></div>
+        <div class="compass-directions">
+          <span class="north">צ</span>
+          <span class="south">ד</span>
+          <span class="east">מ</span>
+          <span class="west">מע</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="results" id="results" style="display: none;">
+      <div class="score" id="score"></div>
+      <div id="feedback"></div>
+    </div>
+
+    <div class="hints" id="hints">
+      <h3 style="color: #8b4513; margin-bottom: 15px;">💡 רמזים למיקום הכלים:</h3>
+      <div class="hint-item" id="hint-courtyard" style="display: none;">
+        🔥 <strong>חצר:</strong> כלי הנחושת — מזבח העולה וכיור
+      </div>
+      <div class="hint-item" id="hint-kodesh" style="display: none;">
+        ✨ <strong>קודש:</strong> מנורה (דרום), שולחן (צפון), מזבח הקטורת (מרכז)
+      </div>
+      <div class="hint-item" id="hint-kodesh-kodashim" style="display: none;">
+        👑 <strong>קודש הקודשים:</strong> ארון הברית בלבד
+      </div>
+    </div>
+
+    <div class="final-cipher" id="final-cipher">
+      <div class="cipher-text">🗝️ הצופן נחשף!</div>
+      <div class="cipher-explanation">
+        המילה הסודית היא: <strong>"קדושה"</strong><br><br>
+        כל כלי במקומו הנכון יוצר את מבנה המשכן,<br>
+        המסמל דרגות קדושה מחצר אל קודש הקודשים.<br><br>
+        🏛️ חצר ← קודש ← קודש הקודשים 🏛️
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let draggedElement = null;
+    let correctPlacements = 0;
+    const totalVessels = 6;
+
+    // מיפוי מדויק של הכלים לעיגולים:
+    // בקודש: kodesh-0 = צפון (שולחן), kodesh-1 = דרום (מנורה), kodesh-2 = מרכז (קטורת)
+    const correctPositions = {
+      altar: 'courtyard-0',
+      laver: 'courtyard-1',
+      table: 'kodesh-0',          // צפון
+      menorah: 'kodesh-1',        // דרום
+      incense: 'kodesh-2',        // מרכז
+      ark: 'kodesh-kodashim-0'
+    };
+
+    const vesselNames = {
+      altar: 'מזבח העולה',
+      laver: 'כיור',
+      menorah: 'מנורה',
+      table: 'שולחן לחם הפנים',
+      incense: 'מזבח הקטורת',
+      ark: 'ארון הברית'
+    };
+
+    // Drag & Drop – דסקטופ
+    document.addEventListener('DOMContentLoaded', () => {
+      const vessels = document.querySelectorAll('.vessel');
+      const dropCircles = document.querySelectorAll('.drop-circle');
+
+      vessels.forEach(v => {
+        v.addEventListener('dragstart', handleDragStart);
+        v.addEventListener('dragend', handleDragEnd);
+      });
+
+      dropCircles.forEach(c => {
+        c.addEventListener('dragover', handleDragOver);
+        c.addEventListener('dragenter', handleDragEnter);
+        c.addEventListener('dragleave', handleDragLeave);
+        c.addEventListener('drop', handleDrop);
+      });
+    });
+
+    function handleDragStart(e) {
+      draggedElement = this;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.outerHTML);
+    }
+
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+      draggedElement = null;
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleDragEnter() {
+      this.classList.add('drag-over');
+    }
+
+    function handleDragLeave() {
+      this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+      if (e.stopPropagation) e.stopPropagation();
+      this.classList.remove('drag-over');
+
+      if (draggedElement && this.children.length === 0) {
+        this.appendChild(draggedElement);
+        resetDropZoneStyles();
+      }
+      return false;
+    }
+
+    function resetDropZoneStyles() {
+      document.querySelectorAll('.drop-circle').forEach(c => {
+        c.classList.remove('correct', 'incorrect', 'drag-over');
+      });
+    }
+
+    function checkPlacement() {
+      correctPlacements = 0;
+      const dropCircles = document.querySelectorAll('.drop-circle');
+      const incorrectItems = [];
+      resetDropZoneStyles();
+
+      dropCircles.forEach(circle => {
+        const vessel = circle.querySelector('.vessel');
+        const position = circle.dataset.position;
+
+        if (vessel) {
+          const vesselType = vessel.dataset.vessel;
+          const expected = correctPositions[vesselType];
+
+          if (expected === position) {
+            correctPlacements++;
+            circle.classList.add('correct');
+          } else {
+            circle.classList.add('incorrect');
+            const areaType = circle.dataset.area;
+            incorrectItems.push({
+              vessel: vesselNames[vesselType],
+              current: getAreaName(areaType),
+              correct: getAreaName(expected.split('-')[0]),
+              targetSpot: spotName(expected)
+            });
+          }
+        }
+      });
+
+      showResults(incorrectItems);
+    }
+
+    function getAreaName(area) {
+      const names = {
+        courtyard: 'חצר',
+        kodesh: 'קודש',
+        'kodesh-kodashim': 'קודש הקודשים'
+      };
+      return names[area] || area;
+    }
+
+    function spotName(position) {
+      if (position.startsWith('kodesh-')) {
+        const idx = position.split('-')[1];
+        if (idx === '0') return 'צפון';
+        if (idx === '1') return 'דרום';
+        if (idx === '2') return 'מרכז';
+      }
+      return '';
+    }
+
+    function showResults(incorrectItems) {
+      const resultsDiv = document.getElementById('results');
+      const scoreDiv = document.getElementById('score');
+      const feedbackDiv = document.getElementById('feedback');
+
+      scoreDiv.textContent = `ציון: ${correctPlacements}/${totalVessels} נכון`;
+
+      if (correctPlacements === totalVessels) {
+        feedbackDiv.innerHTML = '🎉 <strong>מושלם!</strong> כל הכלים במקום הנכון!';
+        feedbackDiv.style.color = '#155724';
+        showFinalCipher();
+      } else {
+        let feedback = '❌ <strong>כלים שלא במקום הנכון:</strong><br>';
+        incorrectItems.forEach(item => {
+          const spotText = item.targetSpot ? ` — נקודת יעד: ${item.targetSpot}` : '';
+          feedback += `• ${item.vessel}: נמצא ב${item.current}, צריך להיות ב${item.correct}${spotText}<br>`;
+        });
+        feedbackDiv.innerHTML = feedback;
+        feedbackDiv.style.color = '#721c24';
+      }
+      resultsDiv.style.display = 'block';
+    }
+
+    function toggleHints() {
+      const hintsDiv = document.getElementById('hints');
+      const isVisible = hintsDiv.classList.contains('show');
+      if (isVisible) {
+        hintsDiv.classList.remove('show');
+      } else {
+        hintsDiv.classList.add('show');
+        showProgressiveHints();
+      }
+    }
+
+    function showProgressiveHints() {
+      document.getElementById('hint-courtyard').style.display = 'block';
+      document.getElementById('hint-kodesh').style.display = 'block';
+      document.getElementById('hint-kodesh-kodashim').style.display = 'block';
+    }
+
+    function showFinalCipher() {
+      const cipherDiv = document.getElementById('final-cipher');
+      setTimeout(() => {
+        cipherDiv.classList.add('show');
+        setTimeout(() => addNextPageButton(), 2000);
+      }, 1000);
+    }
+
+    function addNextPageButton() {
+      const cipherDiv = document.getElementById('final-cipher');
+      if (cipherDiv.querySelector('button')) return;
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn check-btn';
+      nextBtn.style.marginTop = '20px';
+      nextBtn.textContent = 'עבור לעמוד הבא';
+      nextBtn.onclick = goToNextPage;
+      cipherDiv.appendChild(nextBtn);
+    }
+
+    function goToNextPage() {
+      alert('מעבר לעמוד הבא - כאן יהיה השלב הבא של המשחק!');
+    }
+
+    function resetGame() {
+      const vesselsContainer = document.querySelector('.vessels-container');
+      document.querySelectorAll('.vessel').forEach(v => vesselsContainer.appendChild(v));
+      resetDropZoneStyles();
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('hints').classList.remove('show');
+      document.getElementById('final-cipher').classList.remove('show');
+      document.querySelectorAll('.hint-item').forEach(h => h.style.display = 'none');
+      correctPlacements = 0;
+    }
+
+    // תמיכה במסכי מגע
+    let touchItem = null;
+    document.addEventListener('touchstart', function (e) {
+      if (e.target.classList.contains('vessel')) {
+        touchItem = e.target;
+        touchItem.classList.add('dragging');
+      }
+    });
+    document.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+    }, { passive: false });
+    document.addEventListener('touchend', function (e) {
+      if (touchItem) {
+        const touch = e.changedTouches[0];
+        const dropCircle = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (dropCircle && dropCircle.classList.contains('drop-circle') && dropCircle.children.length === 0) {
+          dropCircle.appendChild(touchItem);
+          resetDropZoneStyles();
+        }
+        touchItem.classList.remove('dragging');
+        touchItem = null;
+      }
+    });
+  </script>
 </body>
 </html>
