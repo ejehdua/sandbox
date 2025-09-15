@@ -337,6 +337,135 @@
             margin-bottom: 8px;
         }
         
+        .verse-hint-btn {
+            background: rgba(255, 215, 0, 0.8);
+            border: 1px solid #daa520;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .verse-hint-btn:hover {
+            background: #ffd700;
+            transform: scale(1.1);
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup-content {
+            background: linear-gradient(145deg, #fff8dc, #ffeaa7);
+            border: 3px solid #daa520;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .popup-title {
+            color: #8b4513;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .popup-verse {
+            color: #654321;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .popup-close {
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            transform: translateY(-2px);
+        }
+        
+        .courtyard-visual {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .courtyard-rectangle {
+            position: relative;
+            width: 200px;
+            height: 100px;
+            border: 3px solid #daa520;
+            background: linear-gradient(135deg, rgba(255, 248, 220, 0.3), rgba(255, 245, 238, 0.5));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dimension-label {
+            position: absolute;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #8b4513;
+            background: rgba(255, 248, 220, 0.9);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #daa520;
+        }
+        
+        .dimension-label.top {
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .dimension-label.side {
+            right: -45px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            transform-origin: center;
+        }
+        
+        .courtyard-content {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .altar, .laver, .tent {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+        
         .hidden {
             display: none;
         }
@@ -363,8 +492,7 @@
 </head>
 <body>
     <div class="game-container">
-        <h1 class="title">⛺ צופן החצר</h1>
-        <p class="subtitle">משחק חידות מסתורי על המשכן הקדוש</p>
+        <h1 class="title">🗝️ צופן החצר</h1>
         
         <div class="progress">
             <div class="progress-text" id="progress">חידות נכונות: 0/3 | צריך 3 כדי לפתוח את הצופן הסודי</div>
@@ -391,13 +519,28 @@
         <div id="final-challenge" class="hidden">
             <div class="riddle-container final-challenge">
                 <div class="riddle-text">
-                    ⛺ הצופן הסודי - צופן החצר!<br><br>
+                    🗝️ הצופן הסודי - צופן החצר!<br><br>
                     עכשיו הגיע הזמן לפתור את הצופן הגדול...<br><br>
-                    חשב את המספר הסודי על ידי חיבור של:<br>
-                    • אורך החצר של המשכן (באמות)<br>
-                    • רוחב החצר של המשכן (באמות)<br>
-                    • מספר העמודים שמקיפים את החצר<br><br>
-                    💡 עליך לזכור או לגלות את המספרים בעצמך!
+                    חשב את שטח החצר הקדושה:<br>
+                    <strong>אורך × רוחב = ?</strong><br><br>
+                    
+                    <div class="courtyard-visual">
+                        <div class="courtyard-rectangle">
+                            <div class="dimension-label top">אורך: ? אמות</div>
+                            <div class="dimension-label side">רוחב: ? אמות</div>
+                            <div class="courtyard-content">
+                                <div class="altar">🔥</div>
+                                <div class="laver">💧</div>
+                                <div class="tent">⛺</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    💡 עליך לגלות את המידות בעצמך!
+                </div>
+                <div class="hint-section">
+                    <button class="hint-btn" onclick="showCourtyardHint()">רמז למידות החצר</button>
+                    <div id="courtyard-hint" class="hint-display hidden"></div>
                 </div>
                 <div class="input-container">
                     <input type="number" id="code-input" placeholder="הכנס את המספר הסודי...">
@@ -416,6 +559,8 @@
                 <button class="btn" onclick="restartGame()" style="background: white; color: #228b22;">שחק שוב</button>
             </div>
         </div>
+        
+
     </div>
 
     <script>
@@ -513,8 +658,8 @@
             }
         ];
         
-        // The secret code: 100 (length) + 50 (width) + 60 (pillars) = 210
-        const SECRET_CODE = 210;
+        // The secret code: 100 (length) × 50 (width) = 5000
+        const SECRET_CODE = 5000;
         
         function updateProgress() {
             document.getElementById('progress').textContent = 
@@ -598,7 +743,9 @@
         
         function loadCurrentRiddle() {
             const riddle = riddles[currentRiddle];
-            document.getElementById('riddle-text').innerHTML = riddle.question;
+            // Replace the riddle number with the current sequence number
+            const riddleText = riddle.question.replace(/🔹 חידה \d+:/, `🔹 חידה ${correctAnswers + 1}:`);
+            document.getElementById('riddle-text').innerHTML = riddleText;
             document.getElementById('answer-input').value = '';
             document.getElementById('feedback').classList.add('hidden');
             document.getElementById('hint-display').classList.add('hidden');
@@ -660,10 +807,10 @@
                 finalAttempts++;
                 
                 if (finalAttempts === 1) {
-                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: חצר המשכן הייתה מלבן גדול, והיו עמודים רבים מסביב.<br>נסה שוב!`;
+                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: חצר המשכן הייתה מלבן גדול.<br>חשב את השטח!`;
                     finalFeedback.className = 'feedback hint';
                 } else {
-                    finalFeedback.innerHTML = `💡 רמז נוסף:<br>אורך החצר: 100 אמות<br>רוחב החצר: 50 אמות<br>מספר העמודים: 60<br>חבר את כל המספרים!`;
+                    finalFeedback.innerHTML = `💡 רמז נוסף:<br>אורך החצר: 100 אמות<br>רוחב החצר: 50 אמות<br>הכפל: 100 × 50 = ?`;
                     finalFeedback.className = 'feedback hint';
                 }
                 
@@ -711,10 +858,18 @@
             }
         });
         
+        function showCourtyardHint() {
+            const hintDisplay = document.getElementById('courtyard-hint');
+            hintDisplay.innerHTML = '📖 עיין בשמות כז, יח לגילוי מידות החצר';
+            hintDisplay.classList.remove('hidden');
+        }
+        
+
+        
         // Initialize the game
         currentRiddle = getRandomRiddle();
         updateProgress();
         loadCurrentRiddle();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fa7a2ec66e0dd4',t:'MTc1Nzk2Mzk4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fa8c4794662212',t:'MTc1Nzk2NDcyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
