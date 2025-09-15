@@ -12,7 +12,7 @@
     body {
       font-family: 'Heebo', sans-serif;
       background: #ffffff;         /* בלי רקע מיוחד */
-      min-height: 60vh;            /* נמוך יותר */
+      min-height: 60vh;            /* קצת נמוך יותר */
       padding: 20px;
       overflow-x: auto;
     }
@@ -53,9 +53,9 @@
       border-radius: 10px;
       padding: 8px;
       position: relative;
-      min-height: 120px;           /* מעט נמוך יותר */
+      min-height: 120px;
       width: 100%;
-      max-width: 700px;            /* מעט רחב יותר */
+      max-width: 700px;
       display: flex;
       flex-direction: column;
       background: transparent;     /* בלי רקע */
@@ -255,17 +255,7 @@
     .hints.show { display: block; }
     .hint-item { color: #856404; margin-bottom: 8px; font-size: 0.9rem; }
 
-    .final-cipher {
-      border: 3px solid #daa520;
-      border-radius: 15px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 20px;
-      display: none;
-      background: transparent;
-    }
-    .final-cipher.show { display: block; }
-    .cipher-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; }
+    .final-cipher { display: none; } /* כבר לא מציגים בעמוד זה — נעבור לעמוד הבא */
 
     /* מצפן קטן (לא חובה, רק עזר ויזואלי) */
     .compass { display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; }
@@ -292,7 +282,7 @@
   </style>
 </head>
 <body>
-  <div class="game-container">
+  <div class="game-container" id="container">
     <h1 class="title">🗝️ צופן קודש הקודשים</h1>
     <p class="subtitle">גרור את כלי המשכן למקומם הנכון</p>
 
@@ -384,16 +374,6 @@
         👑 <strong>קודש הקודשים:</strong> ארון הברית בלבד
       </div>
     </div>
-
-    <div class="final-cipher" id="final-cipher">
-      <div class="cipher-text">🗝️ הצופן נחשף!</div>
-      <div class="cipher-explanation">
-        המילה הסודית היא: <strong>"קדושה"</strong><br><br>
-        כל כלי במקומו הנכון יוצר את מבנה המשכן,<br>
-        המסמל דרגות קדושה מחצר אל קודש הקודשים.<br><br>
-        🏛️ חצר ← קודש ← קודש הקודשים 🏛️
-      </div>
-    </div>
   </div>
 
   <script>
@@ -421,7 +401,6 @@
       ark: 'ארון הברית'
     };
 
-    // Drag & Drop – דסקטופ
     document.addEventListener('DOMContentLoaded', () => {
       const vessels = document.querySelectorAll('.vessel');
       const dropCircles = document.querySelectorAll('.drop-circle');
@@ -542,9 +521,9 @@
       scoreDiv.textContent = `ציון: ${correctPlacements}/${totalVessels} נכון`;
 
       if (correctPlacements === totalVessels) {
-        feedbackDiv.innerHTML = '🎉 <strong>מושלם!</strong> כל הכלים במקום הנכון!';
+        feedbackDiv.innerHTML = '🎉 <strong>מושלם!</strong> כל הכלים במקום הנכון!<br>לחצ/י על "עבור לעמוד הבא".';
         feedbackDiv.style.color = '#155724';
-        showFinalCipher();
+        addNextPageButton();
       } else {
         let feedback = '❌ <strong>כלים שלא במקום הנכון:</strong><br>';
         incorrectItems.forEach(item => {
@@ -555,6 +534,32 @@
         feedbackDiv.style.color = '#721c24';
       }
       resultsDiv.style.display = 'block';
+    }
+
+    function addNextPageButton() {
+      const resultsDiv = document.getElementById('results');
+      if (resultsDiv.querySelector('.next-btn')) return; // לא ליצור כפילויות
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'btn check-btn next-btn';
+      nextBtn.style.marginTop = '15px';
+      nextBtn.textContent = 'עבור לעמוד הבא';
+      nextBtn.onclick = goToNextPage;
+      resultsDiv.appendChild(nextBtn);
+    }
+
+    // "עמוד הבא" — מחליף את תוכן הקונטיינר בעמוד הסופי המבוקש, ללא כפתורים נוספים
+    function goToNextPage() {
+      const container = document.getElementById('container');
+      container.innerHTML = `
+        <h1 class="title">🗝️ הצופן נחשף!</h1>
+        <div style="text-align:center; font-size:1.1rem; line-height:1.8; padding: 10px;">
+          <div style="margin-bottom:10px;">המילה הסודית היא: <strong>"קדושה"</strong></div>
+          <div>כל כלי במקומו הנכון יוצר את מבנה המשכן,</div>
+          <div>המסמל דרגות קדושה מחצר אל קודש הקודשים.</div>
+          <div style="margin-top:14px;">🏛️ חצר ← קודש ← קודש הקודשים 🏛️</div>
+        </div>
+      `;
+      // אין כפתור נוסף; זהו המסך הסופי.
     }
 
     function toggleHints() {
@@ -574,36 +579,12 @@
       document.getElementById('hint-kodesh-kodashim').style.display = 'block';
     }
 
-    function showFinalCipher() {
-      const cipherDiv = document.getElementById('final-cipher');
-      setTimeout(() => {
-        cipherDiv.classList.add('show');
-        setTimeout(() => addNextPageButton(), 2000);
-      }, 1000);
-    }
-
-    function addNextPageButton() {
-      const cipherDiv = document.getElementById('final-cipher');
-      if (cipherDiv.querySelector('button')) return;
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'btn check-btn';
-      nextBtn.style.marginTop = '20px';
-      nextBtn.textContent = 'עבור לעמוד הבא';
-      nextBtn.onclick = goToNextPage;
-      cipherDiv.appendChild(nextBtn);
-    }
-
-    function goToNextPage() {
-      alert('מעבר לעמוד הבא - כאן יהיה השלב הבא של המשחק!');
-    }
-
     function resetGame() {
       const vesselsContainer = document.querySelector('.vessels-container');
       document.querySelectorAll('.vessel').forEach(v => vesselsContainer.appendChild(v));
       resetDropZoneStyles();
       document.getElementById('results').style.display = 'none';
       document.getElementById('hints').classList.remove('show');
-      document.getElementById('final-cipher').classList.remove('show');
       document.querySelectorAll('.hint-item').forEach(h => h.style.display = 'none');
       correctPlacements = 0;
     }
