@@ -484,7 +484,7 @@
         <h1 class="title">🗝️ צופן הקודש</h1>
         
         <div class="progress">
-            <div class="progress-text" id="progress">חידות נכונות: 0/3 | צריך 3 כדי לפתוח את הצופן הסודי</div>
+            <div class="progress-text" id="progress">חידות נכונות: 0/8 | צריך 8 כדי לפתוח את הצופן הסודי</div>
         </div>
         
         <div id="riddle-section">
@@ -508,24 +508,23 @@
         <div id="final-challenge" class="hidden">
             <div class="riddle-container final-challenge">
                 <div class="riddle-text">
-                    🗝️ הצופן הסודי - צופן הקודש!<br><br>
-                    עכשיו הגיע הזמן לפתור את הצופן הגדול...<br><br>
+                    🗝️ הצופן הסודי!<br><br>
                     חשב את שטח הקודש:<br>
                     <strong>אורך × רוחב = ?</strong><br><br>
                     
                     <div class="courtyard-visual">
                         <div class="courtyard-rectangle">
-                            <div class="dimension-label top">אורך: ? אמות</div>
-                            <div class="dimension-label side">רוחב: ? אמות</div>
+                            <div class="dimension-label top">? אמות</div>
+                            <div class="dimension-label side">? אמות</div>
                             <div class="courtyard-content">
                                 <div class="altar">🕯️</div>
                                 <div class="laver">🍞</div>
-                                <div class="tent">🌟</div>
+                                <div class="tent">🔥</div>
                             </div>
                         </div>
                     </div>
                     
-                    💡 עליך לגלות את מידות הקודש בעצמך!
+                    💡 גלה את מידות הקודש!
                 </div>
                 <div class="hint-section">
                     <button class="hint-btn" onclick="showCourtyardHint()">רמז למידות הקודש</button>
@@ -561,50 +560,113 @@
         let usedRiddles = [];
         
         const riddles = [
+            // Numbers section
             {
-                question: '🔹 חידה 1:<br>"מקשה אחת מזהב טהור נוצרתי,<br>שבעה קנים — פרח וכפתור בי.<br>בשמן זית זך אאיר<br>מערב עד בוקר — בהיכל."',
-                answers: ['המנורה', 'מנורה', 'מנורת הזהב'],
+                question: '🔹 מספר 1:<br><strong style="font-size: 2rem; color: #ffd700;">7</strong><br><br>איזה כלי קודש קשור למספר הזה?',
+                answers: ['מנורה', 'המנורה', 'מנורת הזהב', 'מנורת המקדש'],
                 hints: [
-                    'עומדת בדרום ההיכל, מול השולחן.',
-                    'פועלת באמצעות שמן זית זך.',
-                    'יש לי שבעה קנים ונעשיתי מקשה אחת.'
+                    'כלי זהב שמאיר את הקודש.',
+                    'יש לו 7 קנים.',
+                    'עומד בצד דרום של הקודש.'
                 ],
                 firstLetter: 'מ',
-                correctFeedback: '✨ מדהים! המנורה - האור הנצחי של הקדש!',
-                incorrectFeedback: '💭 חשוב על מה שמאיר בקדש ועשוי מגוש זהב אחד...'
+                correctFeedback: '🕯️ נכון! המנורה עם 7 הקנים!',
+                incorrectFeedback: '💡 חשוב על כלי האור במשכן...'
             },
             {
-                question: '🔹 חידה 2:<br>"המשביעה בי נרמזת — אך לא כולם אוכלים.<br>זהבי שומר סדר תמיד.<br>שנים־עשר לחמים עליי מונחים,<br>ובשבת — הכוהנים טועמים."',
-                answers: ['שולחן לחם הפנים', 'שולחן', 'לחם הפנים'],
+                question: '🔹 מספר 2:<br><strong style="font-size: 2rem; color: #ffd700;">12</strong><br><br>איזה כלי קודש קשור למספר הזה?',
+                answers: ['שולחן', 'שולחן לחם הפנים', 'לחם הפנים', 'השולחן'],
                 hints: [
-                    'ניצב בצפון ההיכל, מול המנורה.',
-                    'עליו מונחים תמיד 12 לחמים.',
-                    'הלחם מוחלף בשבת, והכוהנים אוכלים ממנו.'
+                    'עליו מונחות 12 חלות.',
+                    'הלחם מתחלף כל שבת.',
+                    'עומד בצד צפון של הקודש.'
                 ],
                 firstLetter: 'ש',
-                correctFeedback: '🍞 נכון מאוד! שולחן לחם הפנים - המזון הקדוש!',
-                incorrectFeedback: '🤔 חשוב על מה שעשוי זהב ומחזיק לחם...'
+                correctFeedback: '🍞 מעולה! שולחן לחם הפנים עם 12 החלות!',
+                incorrectFeedback: '🥖 חשוב על הכלי שעליו הלחם...'
             },
             {
-                question: '🔹 חידה 3:<br>"עליי לא מקריבים בשר ודם,<br>אך ריח נעים עולה ממני בבוקר ובין הערביים.<br>ארבע קרנות לי — ומזהב אני מצופה,<br>ועמוד עשן דק נִשָּׂא; אש זרה — אסורה."',
-                answers: ['מזבח הקטורת', 'מזבח קטורת', 'הקטורת'],
+                question: '🔹 מספר 3:<br><strong style="font-size: 2rem; color: #ffd700;">2</strong><br><br>איזה כלי קודש קשור למספר הזה?',
+                answers: ['מזבח הקטורת', 'מזבח קטורת', 'מזבח הזהב', 'קטורת', 'מזבח'],
                 hints: [
-                    'אני עומד בהיכל (לא בחצר).',
-                    'העבודה עליי נעשית פעמיים ביום.',
-                    'מצופה זהב, יש לי קרנות, ועליי מקטירים קְטֹרֶת.'
+                    'גובהו 2 אמות.',
+                    'מזבח מרובע מזהב.',
+                    'עומד לפני הפרוכת.'
                 ],
                 firstLetter: 'מ',
-                correctFeedback: '🌟 מושלם! מזבח הקטורת - הריח הקדוש העולה לשמים!',
-                incorrectFeedback: '🕊️ חשוב על מה שמעלה ריח נעים בקדש...'
+                correctFeedback: '🔥 מושלם! מזבח הקטורת - גובהו 2 אמות!',
+                incorrectFeedback: '💨 חשוב על הכלי שגובהו 2 אמות...'
+            },
+            // Senses section
+            {
+                question: '🔹 חוש 1:<br><strong style="font-size: 1.5rem; color: #ffd700;">👁️ ראייה</strong><br><br>איזה כלי קודש קשור לחוש הזה?',
+                answers: ['מנורה', 'המנורה', 'מנורת הזהב', 'מנורת המקדש'],
+                hints: [
+                    'הכלי שנותן אור.',
+                    'מאיר את הקודש.',
+                    'בלעדיו הכהנים לא יכלו לראות.'
+                ],
+                firstLetter: 'מ',
+                correctFeedback: '💡 נהדר! המנורה - מקור האור והראייה!',
+                incorrectFeedback: '🕯️ חשוב על מה שמאפשר לראות בקודש...'
+            },
+            {
+                question: '🔹 חוש 2:<br><strong style="font-size: 1.5rem; color: #ffd700;">👃 ריח</strong><br><br>איזה כלי קודש קשור לחוש הזה?',
+                answers: ['מזבח הקטורת', 'מזבח קטורת', 'מזבח הזהב', 'קטורת', 'מזבח'],
+                hints: [
+                    'ממנו עולה ריח טוב.',
+                    'הקטורת עולה ממנו כעשן.',
+                    'הריח מגיע עד לפני ה\'.'
+                ],
+                firstLetter: 'מ',
+                correctFeedback: '🔥 מצוין! מזבח הקטורת - מקור הריח הטוב!',
+                incorrectFeedback: '💨 חשוב על הכלי שממנו עולה ריח...'
+            },
+            {
+                question: '🔹 חוש 3:<br><strong style="font-size: 1.5rem; color: #ffd700;">👄 אכילה</strong><br><br>איזה כלי קודש קשור לחוש הזה?',
+                answers: ['שולחן', 'שולחן לחם הפנים', 'לחם הפנים', 'השולחן'],
+                hints: [
+                    'עליו מונח הלחם.',
+                    'הכהנים אוכלים את הלחם.',
+                    'הלחם מתחלף כל שבת.'
+                ],
+                firstLetter: 'ש',
+                correctFeedback: '🍞 נפלא! שולחן לחם הפנים - מקור האכילה!',
+                incorrectFeedback: '🥖 חשוב על הכלי שעליו האוכל...'
+            },
+            // Directions section
+            {
+                question: '🔹 כיוון 1:<br><strong style="font-size: 1.5rem; color: #ffd700;">🧭 דרום</strong><br><br>איזה כלי קודש עומד בכיוון הזה?',
+                answers: ['מנורה', 'המנורה', 'מנורת הזהב', 'מנורת המקדש'],
+                hints: [
+                    'הכלי שעומד בצד ימין הקודש.',
+                    'מאיר את כל הקודש.',
+                    'כלי הזהב עם 7 הקנים.'
+                ],
+                firstLetter: 'מ',
+                correctFeedback: '🌟 נכון! המנורה עומדת בדרום!',
+                incorrectFeedback: '💡 חשוב על כלי האור שבקודש...'
+            },
+            {
+                question: '🔹 כיוון 2:<br><strong style="font-size: 1.5rem; color: #ffd700;">🧭 צפון</strong><br><br>איזה כלי קודש עומד בכיוון הזה?',
+                answers: ['שולחן', 'שולחן לחם הפנים', 'לחם הפנים', 'השולחן'],
+                hints: [
+                    'הכלי שעומד בצד שמאל הקודש.',
+                    'עליו מונחות 12 חלות.',
+                    'הלחם מתחלף כל שבת.'
+                ],
+                firstLetter: 'ש',
+                correctFeedback: '⚖️ מעולה! השולחן עומד בצפון!',
+                incorrectFeedback: '🍞 חשוב על הכלי עם הלחם...'
             }
         ];
         
-        // The secret code: 20 (length) × 10 (width) = 200
+        // The secret code: 20 (length) × 10 (width) = 200 (Kodesh dimensions)
         const SECRET_CODE = 200;
         
         function updateProgress() {
             document.getElementById('progress').textContent = 
-                `חידות נכונות: ${correctAnswers}/3 | ${correctAnswers >= 3 ? 'הצופן נפתח!' : 'צריך 3 כדי לפתוח את הצופן הסודי'}`;
+                `חידות נכונות: ${correctAnswers}/8 | ${correctAnswers >= 8 ? 'הצופן נפתח!' : 'צריך 8 כדי לפתוח את הצופן הסודי'}`;
         }
         
         function showFeedback(message, type) {
@@ -674,7 +736,7 @@
         }
         
         function nextRiddle() {
-            if (correctAnswers >= 3) {
+            if (correctAnswers >= 8) {
                 showFinalChallenge();
             } else {
                 currentRiddle = getRandomRiddle();
@@ -715,7 +777,7 @@
                 showFeedback(riddle.correctFeedback, 'correct');
                 
                 setTimeout(() => {
-                    if (correctAnswers >= 3) {
+                    if (correctAnswers >= 8) {
                         showFinalChallenge();
                     } else {
                         nextRiddle();
@@ -748,7 +810,7 @@
                 finalAttempts++;
                 
                 if (finalAttempts === 1) {
-                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: הקודש היה מלבן קטן יותר מהחצר.<br>חשב את השטח!`;
+                    finalFeedback.innerHTML = `🤔 לא בדיוק...<br>רמז: הקודש היה מלבן.<br>חשב את השטח!`;
                     finalFeedback.className = 'feedback hint';
                 } else {
                     finalFeedback.innerHTML = `💡 רמז נוסף:<br>אורך הקודש: 20 אמות<br>רוחב הקודש: 10 אמות<br>הכפל: 20 × 10 = ?`;
@@ -801,7 +863,7 @@
         
         function showCourtyardHint() {
             const hintDisplay = document.getElementById('courtyard-hint');
-            hintDisplay.innerHTML = '📖 עיין בשמות כו, טז לגילוי מידות הקודש';
+            hintDisplay.innerHTML = '📖 עיין בשמות כו, טו-טז לגילוי מידות הקודש';
             hintDisplay.classList.remove('hidden');
         }
         
@@ -812,5 +874,5 @@
         updateProgress();
         loadCurrentRiddle();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fad433a502e8b9',t:'MTc1Nzk2NzY3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fb00a5f7372212',t:'MTc1Nzk2OTQ5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
